@@ -1,0 +1,19 @@
+{
+  "logger": {
+    "title": "Remote Sync"
+  },
+  "uploadOnSave": true,
+  "useAtomicWrites": false,
+  "deleteLocal": false,
+  "hostname": "serenity.ist.rit.edu",
+  "port": "22",
+  "target": "/home/MAIN/grd2747/Sites/442/finalProject",
+  "ignore": [
+    ".remote-sync.json",
+    ".git/**"
+  ],
+  "username": "grd2747",
+  "password": "Bv4pbh@r!",
+  "watch": [],
+  "transport": "scp"
+}
