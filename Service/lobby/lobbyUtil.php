@@ -36,7 +36,11 @@ function updateLobby($lobbyString){
 
     }
     //if they are in the lobby but not online remove them
-    array_push($returnJson['remove'], array_diff($lobbyUserArray,$allOnlineUserID));
+    foreach (array_diff($lobbyUserArray,$allOnlineUserID) as $key => $value) {
+        // code...
+        array_push($returnJson['remove'],$value);
+    }
+    //array_push($returnJson['remove'], array_diff($lobbyUserArray,$allOnlineUserID));
 
     echo json_encode($returnJson);
 

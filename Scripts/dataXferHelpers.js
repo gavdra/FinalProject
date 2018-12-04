@@ -45,7 +45,7 @@ function initUpdateLobby(){
             newGameUser += "<button class='mdl-button mdl-js-button' type='button' name='button' disabled>IN GAME</button></div>";
             $(".challengeContainer").append(newGameUser);
         }
-        //
+        //find all users in the lobby to make sure they are styled correctly
         for(const user of json['inLobby']){
             //get the element by name
             var lobbyEle = $("#user_"+user['userID']);
@@ -53,9 +53,9 @@ function initUpdateLobby(){
             $(lobbyEle).removeClass('inGame');
             //make sure the button looks right.
             //May have to add and remove an onclick from this for challenge sending purposes
-            console.log($(lobbyEle).children().closest('button').text("CHALLENGE").removeAttr('disabled'));
+            $(lobbyEle).children().closest('button').text("CHALLENGE").removeAttr('disabled');
         }
-        //
+        //find all users in the lobby who are in game to make sure they are styled correctly
         for(const user of json['inGame']){
             //get the element by name
             var lobbyEle = $("#user_"+user['userID']);
@@ -63,14 +63,19 @@ function initUpdateLobby(){
             if (!$(lobbyEle).hasClass('inGame')){
                 $(lobbyEle).addClass('inGame');
             }
-
+            //change button text to say IN GAME. if disabled class does not exist, add it
             if (!$(lobbyEle).children().closest('button').text("IN GAME").is(':disabled')){
                 $(lobbyEle).children().closest('button').prop('disabled',true);
             }
-            //change button text to say IN GAME. if disabled class does not exist, add it
         }
+
+        for (var i = 0; i < json['remove'].length; i++) {
+            var currID = json['remove'][i];
+            $("#user_"+currID).remove();
+        }
+
     });
-    //setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
+    setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
 }
 
 function initGetChat(called=false) {
