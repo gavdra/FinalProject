@@ -20,12 +20,12 @@ function insertChat($messageText,$userID,$roomID){
 	}
 }
 
-function getRoomChat($roomID){
+function getRoomChat($roomID,$lastMessageID){
 	global $conn; //mysql connection object from dbInfo
 	try{
 		//select roomID,messageID,messageText,timestamp,username from chat join user on chat.userID = user.userID
-		if ($stmt = $conn->prepare("SELECT C.roomID,C.messageID,C.messageText,C.timestamp,U.username FROM chat C join user U on C.userID = U.userID where roomID = ?")){
-			$stmt->bind_param("i", intval($roomID));
+		if ($stmt = $conn->prepare("SELECT C.roomID,C.messageID,C.messageText,C.timestamp,U.username FROM chat C join user U on C.userID = U.userID where C.roomID = ? && C.messageID > ?")){
+			$stmt->bind_param("ii", intval($roomID),intval($lastMessageID));
 			echo returnJson($stmt);
 			$stmt->close();
 			$conn->close();

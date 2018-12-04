@@ -4,14 +4,16 @@
  * Not sure if this should call getChat()
  */
 function initSendChat(){
-    //chatParams = {messageText: $("#chatMessage").val(, roomID: 1, userID: 69}
-    chatParams = {messageText: "message", roomID: 1, userID: 69};
+    chatParams = {messageText: $("#chatMessage").val()}
+    //chatParams = {messageText: "message"};
     MyXHR('post',{method:'sendChat',a:'chat',data: chatParams}).done(function(json){
         //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
         //clear message box
-
        // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
-    });
+   }).always(function(){
+       $("#chatMessage").val("");
+       initGetChat(true);
+   });
 }
 
 /**
@@ -24,39 +26,33 @@ function initUpdateLobby(){
     MyXHR('get',{method:'updateLobby',a:'lobby',data: lobbyString}).done(function(json){
         console.log("it worked");
         console.log(json);
-        //JSON= {add:, delete:, inGame:}
-
-        //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
-        //clear message box
-
     });
     //setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
 }
 
-function getChat() {
-    chatParams = {roomID: 1}
-    MyXHR('get',{method:'getChat',a:'chat',data: chatParams}).done(function(json){
-        //append to UL WITH THE ID chatList
-        //              <li class="mdl-list__item mdl-list__item--three-line">
-        var eleString = "<li class='mdl-list__item mdl-list__item--three-line chatHeightMax'>" ;
-        //               <span class="mdl-list__item-primary-content">
-        eleString += "<span class='mdl-list__item-primary-content chatHeightMax'>" ;
-        //               <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-        eleString += "<span class='chatNameSpan'>"+"ButtMuncher1"+"<span class='timestamp'>"+"[2:30PM]"+"</span></span>" ;
-        //                        <span class="mdl-list__item-text-body chatMessageSpan">
-        eleString += "<span class='mdl-list__item-text-body chatMessageSpan'>" ;
-        //                            Will Sucks a lot of big butts i cant even believe it its rediculous
-        eleString += "chat Message Here admfbakdfba fa sf ashdjf asdf hasd fasdh fajs dfkashd fkjahd fkahdkfahjdfka dfkh";
-        //                        </span>
-        //                      </span>
-        //                    </li>
-        eleString += "</span></span></li>" ;
-        $("#chatList").append(eleString);
-        $("#chatList").append(eleString);
-        //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
-        //clear message box
-        console.log(json);
-       //   setTimeout('getChat()',2000); //keeping this for future ref to put at bottom of getChat
+function initGetChat(called=false) {
+    lastChatID = $("#chatList").find("li").last().attr('id');
+    MyXHR('get',{method:'getChat',a:'chat',data: lastChatID}).done(function(json){
+        if (json){
+            for (i = 0; i < json.length; i++){
+                var messageTimestamp = new Date(json[i]['timestamp']);
+                var hours24 = messageTimestamp.getHours();
+                var tod = hours24 > 12 ? 'PM' : 'AM';
+                var hours12 = hours24 > 12 ? hours24 - 12 : hours24;
+                var minutes = messageTimestamp.getMinutes() + tod;
+
+                var eleString = "<li id='"+json[i]['messageID']+"' class='mdl-list__item mdl-list__item--three-line chatHeightMax'>" ;
+                eleString += "<span class='mdl-list__item-primary-content chatHeightMax'>" ;
+                eleString += "<span class='chatNameSpan'>"+json[i]['username']+"<span class='timestamp'>"+"["+hours12+":"+minutes+"]</span></span>" ;
+                eleString += "<span class='mdl-list__item-text-body chatMessageSpan'>" ;
+                eleString += json[i]['messageText'];
+                eleString += "</span></span></li><hr>" ;
+                $("#chatList").append(eleString);
+            }
+        }
+        if (!called){
+            setTimeout('initGetChat()',2000); //keeping this for future ref to put at bottom of getChat
+        }
     });
 
 }

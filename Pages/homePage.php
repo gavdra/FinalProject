@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="../Styles/style.css">
         <title>Home Page</title>
     </head>
-    <body onload="scrollHomepageChat();initUpdateLobby();">
+    <body onload="initGetChat();scrollHomepageChat();">
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
@@ -65,46 +65,9 @@
                     <h1>Chat</h1>
                     <div class="homepageChat">
                         <ul id="chatList" class="mdl-list">
-                            <li class="mdl-list__item mdl-list__item--three-line">
-                              <span class="mdl-list__item-primary-content">
-                                <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                                <span class="mdl-list__item-text-body chatMessageSpan">
-                                    Will Sucks a lot of big butts i cant even believe it its ridiculous
-                                </span>
-                              </span>
-                            </li>
-                            <hr>
-                            <li class="mdl-list__item mdl-list__item--three-line">
-                              <span class="mdl-list__item-primary-content">
-                                <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                                <span class="mdl-list__item-text-body chatMessageSpan">
-                                    Will Sucks a lot of big butts i cant even believe it its ridiculous
-                                </span>
-                              </span>
-                            </li>
-                            <hr>
-                            <li class="mdl-list__item mdl-list__item--three-line">
-                              <span class="mdl-list__item-primary-content">
-                                <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                                <span class="mdl-list__item-text-body chatMessageSpan">
-                                    Will Sucks a lot of big butts i cant even believe it its ridiculous
-                                </span>
-                              </span>
-                            </li>
-                            <hr>
-                            <li class="mdl-list__item mdl-list__item--three-line">
-                              <span class="mdl-list__item-primary-content">
-                                <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                                <span class="mdl-list__item-text-body chatMessageSpan">
-                                    Will Sucks a lot of big butts i cant even believe it its ridiculous
-                                </span>
-                              </span>
-                            </li>
-                            <hr>
-
                         </ul>
                         <div class="chatInput mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input darkerTB" type="text" id="chatMessage">
+                            <input onclick="scrollHomepageChat()" class="mdl-textfield__input darkerTB" type="text" id="chatMessage">
                             <label class="mdl-textfield__label darkerTBL" for="chatMessage">Message Text</label>
                         </div>
                         <button onclick="initSendChat()" class="mdl-button mdl-js-button mdl-button--icon"><i class="material-icons">send</i></button>
