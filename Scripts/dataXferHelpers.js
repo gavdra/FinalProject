@@ -22,7 +22,13 @@ function initSendChat(){
  */
 function initUpdateLobby(){
     //lobbyString = all user IDs in lobby separated by _
-    lobbyString = "1_2_3_4_69";
+    lobbyString = "";
+    $(".challenge").each(function(i,ele){
+        lobbyString += ele.id.split("_")[1]+"_";
+    });
+    //remove the extra _
+    lobbyString = lobbyString.slice(0,-1);
+    console.log(lobbyString);
     MyXHR('get',{method:'updateLobby',a:'lobby',data: lobbyString}).done(function(json){
         console.log("it worked");
         console.log(json);

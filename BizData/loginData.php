@@ -66,4 +66,28 @@ function checkLogin($username,$password){
 
 }
 
+function getUserID($username){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT userID FROM user WHERE username = ?")){
+            $stmt->bind_param("s", $username);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($userID);
+            while ($stmt->fetch()) {
+                return $userID;
+            }
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+
+}
+
  ?>

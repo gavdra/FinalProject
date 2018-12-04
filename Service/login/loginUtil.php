@@ -8,8 +8,8 @@ if (isset($_POST["loginButton"])) {
     if (checkLogin($validatedPOST['userName'],$validatedPOST['password'])) {
         //combo was correct, send them to homepage
         //TODO: write getUserID(), generic get data function..
-        //$_SESSION['userID'] = getUserID($validatedPOST['userName']);
-        $_SESSION['userID'] = 1;
+        $_SESSION['userID'] = getUserID($validatedPOST['userName']);
+        //$_SESSION['userID'] = 1;
         //roomID of 1 is the lobby, this is where they get sent automatically.
         $_SESSION['roomID'] = 1;
         header("Location: ../../Pages/homePage.php");
