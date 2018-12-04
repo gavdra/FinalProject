@@ -28,10 +28,47 @@ function initUpdateLobby(){
     });
     //remove the extra _
     lobbyString = lobbyString.slice(0,-1);
-    console.log(lobbyString);
     MyXHR('get',{method:'updateLobby',a:'lobby',data: lobbyString}).done(function(json){
-        console.log("it worked");
-        console.log(json);
+        //create elements for lobby users
+        for(const user of json['addInLobby']){
+            var newLobbyUser = "<div id='user_"+user['userID']+"' class='challenge mdl-color--primary'>";
+            newLobbyUser += "<span class='challengeTxt challengeName'>"+user['username']+"</span>";
+            newLobbyUser += "<span class='challengeTxt'>Wins: "+user['gamesWon']+"</span>";
+            newLobbyUser += "<button class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>";
+            $(".challengeContainer").append(newLobbyUser);
+        }
+        //create elements for in game users
+        for(const user of json['addInGame']){
+            var newGameUser = "<div id='user_"+user['userID']+"' class='challenge mdl-color--primary inGame'>";
+            newGameUser += "<span class='challengeTxt challengeName'>"+user['username']+"</span>";
+            newGameUser += "<span class='challengeTxt'>Wins: "+user['gamesWon']+"</span>";
+            newGameUser += "<button class='mdl-button mdl-js-button' type='button' name='button' disabled>IN GAME</button></div>";
+            $(".challengeContainer").append(newGameUser);
+        }
+        //
+        for(const user of json['inLobby']){
+            //get the element by name
+            var lobbyEle = $("#user_"+user['userID']);
+            //make sure the ingame class is removed
+            $(lobbyEle).removeClass('inGame');
+            //make sure the button looks right.
+            //May have to add and remove an onclick from this for challenge sending purposes
+            console.log($(lobbyEle).children().closest('button').text("CHALLENGE").removeAttr('disabled'));
+        }
+        //
+        for(const user of json['inGame']){
+            //get the element by name
+            var lobbyEle = $("#user_"+user['userID']);
+            //if inGame class does not exist, add it
+            if (!$(lobbyEle).hasClass('inGame')){
+                $(lobbyEle).addClass('inGame');
+            }
+
+            if (!$(lobbyEle).children().closest('button').text("IN GAME").is(':disabled')){
+                $(lobbyEle).children().closest('button').prop('disabled',true);
+            }
+            //change button text to say IN GAME. if disabled class does not exist, add it
+        }
     });
     //setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
 }

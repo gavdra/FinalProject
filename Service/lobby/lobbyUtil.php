@@ -15,23 +15,23 @@ function updateLobby($lobbyString){
 
         //user is in the lobby and is in game. add ingame class
         if (in_array($user->userID, $lobbyUserArray) && $user->inGameYN ){
-            array_push($returnJson['inGame'],$user->userID);
+            array_push($returnJson['inGame'],$user);
         }
 
         //in the lobby but not in game. display regular lobby view
         if (in_array($user->userID, $lobbyUserArray) && !$user->inGameYN ){
-            array_push($returnJson['inLobby'],$user->userID);
+            array_push($returnJson['inLobby'],$user);
         }
 
 
         //not in lobby and not in game. add them to lobby
         if (!in_array($user->userID, $lobbyUserArray) && !$user->inGameYN ){
-            array_push($returnJson['addInLobby'],$user->userID);
+            array_push($returnJson['addInLobby'],$user);
         }
 
         //not in lobby and in game.
         if (!in_array($user->userID, $lobbyUserArray) && $user->inGameYN ){
-            array_push($returnJson['addInGame'],$user->userID);
+            array_push($returnJson['addInGame'],$user);
         }
 
     }
