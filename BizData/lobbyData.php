@@ -20,6 +20,25 @@ function getOnlineUsers(){
     // code...
 }
 
+function getAllChallenges(){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM user WHERE onlineYN = 1")){
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+    // code...
+}
+
 
 function returnJson ($stmt){
 	$stmt->execute();

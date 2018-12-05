@@ -39,13 +39,13 @@
                             <span class="challengeTxt challengeName">FuckBoi69</span>
                             <span class="challengeTxt">Wins: 69</span>
                             <button class= "mdl-button mdl-js-button" type="button" name="button">CHALLENGE</button>
-                        </div>
-                        <div id="user_2" class="challenge mdl-color--primary">
+                        </div> -->
+                        <!-- <div id="user_2" class="challenge mdl-color--primary">
                             <span class="challengeTxt challengeName">PoopMaster420</span>
                             <span class="challengeTxt">Wins: 69</span>
                             <div class="mdl-spinner mdl-js-spinner is-active"></div>
-                        </div> -->
-                        <!-- <div id="user_3" class="challenge mdl-color--primary">
+                        </div>
+                        <div id="user_1" class="challenge mdl-color--primary">
                             <span class="challengeTxt challengeName">SneakySpider710</span>
                             <span class="challengeTxt">Has Challenged You</span>
                             <div class="adButtons">

@@ -1,21 +1,3 @@
-
-/**
- * Front end call for sendChat
- * Not sure if this should call getChat()
- */
-function initSendChat(){
-    chatParams = {messageText: $("#chatMessage").val()}
-    //chatParams = {messageText: "message"};
-    MyXHR('post',{method:'sendChat',a:'chat',data: chatParams}).done(function(json){
-        //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
-        //clear message box
-       // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
-   }).always(function(){
-       $("#chatMessage").val("");
-       initGetChat(true);
-   });
-}
-
 /**
  * Front end call to update lobby
  * This will be on a timer to keep the lobby in sync
@@ -23,11 +5,12 @@ function initSendChat(){
 function initUpdateLobby(){
     //lobbyString = all user IDs in lobby separated by _
     lobbyString = "";
-    $(".challenge").each(function(i,ele){
+    $(".challenge").each(function(ind,ele){
         lobbyString += ele.id.split("_")[1]+"_";
     });
     //remove the extra _
     lobbyString = lobbyString.slice(0,-1);
+
     MyXHR('get',{method:'updateLobby',a:'lobby',data: lobbyString}).done(function(json){
         //create elements for lobby users
         for(const user of json['addInLobby']){
@@ -73,10 +56,57 @@ function initUpdateLobby(){
             var currID = json['remove'][i];
             $("#user_"+currID).remove();
         }
-
     });
-    setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
+    //initUpdateChallenges();
+    //setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
 }
+
+function initUpdateChallenges(){
+    //lobbyString = all user IDs in lobby separated by _
+    lobbyString = "";
+    $(".challenge").each(function(ind,ele){
+        lobbyString += ele.id.split("_")[1]+"_";
+    });
+    //remove the extra _
+    lobbyString = lobbyString.slice(0,-1);
+   //  MyXHR('get',{method:'updateChallenges',a:'lobby',data: lobbyString}).done(function(json){
+   //      //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
+   //      //clear message box
+   //     // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
+   //
+   // });
+
+//lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
+    //Update lobby user to show yes or no button, they should have the challengeID in them for passing
+//current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
+    //update the lobby user to show a spinner
+//challenge that current user sent to lobby user has been denied or timed out
+    //update lobby user that has the spinner to remove it and show standard view. THIS NEEDS ALL OF THE USERS INFO
+//challenge that lobby user sent to current user has been denied or timed out
+    //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
+
+}
+
+//TODO: Make an event listener for the challenge accept and deny button
+//if the accept button is clicked then put them both into a lobby
+
+/**
+ * Front end call for sendChat
+ * Not sure if this should call getChat()
+ */
+function initSendChat(){
+    chatParams = {messageText: $("#chatMessage").val()}
+    //chatParams = {messageText: "message"};
+    MyXHR('post',{method:'sendChat',a:'chat',data: chatParams}).done(function(json){
+        //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
+        //clear message box
+       // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
+   }).always(function(){
+       $("#chatMessage").val("");
+       initGetChat(true);
+   });
+}
+
 
 function initGetChat(called=false) {
     lastChatID = $("#chatList").find("li").last().attr('id');
@@ -102,7 +132,6 @@ function initGetChat(called=false) {
             setTimeout('initGetChat()',2000); //keeping this for future ref to put at bottom of getChat
         }
     });
-
 }
 
 function MyXHR(getPost,d){
