@@ -45,27 +45,40 @@ function updateLobby($lobbyString){
 }
 
 function updateChallenges($lobbyString){
-    $returnJson = array('updateShowButtons'=>array(),'updateShowSpinner'=>array(),'updateRemoveButtons'=>array(),'updateRemoveSpinner'=>array(),'addToGame'=>array());
-
-    //lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
-        //Update lobby user to show yes or no button, they should have the challengeID in them for passing
-    //current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
-        //update the lobby user to show a spinner
-    //challenge that current user sent to lobby user has been denied or timed out
-        //update lobby user that has the spinner to remove it and show standard view. THIS NEEDS ALL OF THE USERS INFO
-    //challenge that lobby user sent to current user has been denied or timed out
-        //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
+    $returnJson = array('updateShowButtons'=>array(),'updateShowSpinner'=>array(),'updateRemoveButtons'=>array(),'updateRemoveSpinner'=>array());
 
     $lobbyUserArray = explode("_",$lobbyString);
 
-
-    //this will just store all online users to check who to remove after
-    $allOnlineUserID = array();
-    //create array that will become json to send back to javascript
-    $returnJson = array('inGame'=>array(),'inLobby'=>array(),'addInLobby'=>array(),'addInGame'=>array(),'remove'=>array());
-
     //loop through array of all challenges
-    $challengeArray = json_decode(getAllChallenges());
+    $challengeArray = json_decode(getUserChallenges($_SESSION['userID']));
+
+    foreach ($challengeArray as $ind => $currChallenge) {
+        //print_r($currChallenge);
+        //userIDSend, userIDRec, acceptedYN, challengeID
+        //in_array($needle, $haystack)
+
+        //lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
+        if ($currChallenge->userIDRec == $_SESSION['userID']){
+            if (in_array($currChallenge->userIDSend,$lobbyUserArray)) array_push($returnJson['updateShowButtons'],$currChallenge->userIDSend);
+        }
+            //Update lobby user to show yes or no button, they should have the challengeID in them for passing
+
+
+        //
+        // //current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
+        if ($currChallenge->userIDSend == $_SESSION['userID']){
+            if(in_array($currChallenge->userIDRec,$lobbyUserArray)) array_push($returnJson['updateShowSpinner'],$currChallenge->userIDRec);
+        }
+            //update the lobby user to show a spinner
+        //challenge that current user sent to lobby user has been denied or timed out
+            //update lobby user that has the spinner to remove it and show standard view. THIS NEEDS ALL OF THE USERS INFO
+        //challenge that lobby user sent to current user has been denied or timed out
+            //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
+    }
+    // echo "Lobby array: ";
+    // print_r($lobbyUserArray);
+    // echo "challenge array: ";
+    // print_r($challengeArray);
     // foreach ($onlineUserArray as $ind => $user) {
     //
     // }

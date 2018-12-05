@@ -10,7 +10,6 @@ function initUpdateLobby(){
     });
     //remove the extra _
     lobbyString = lobbyString.slice(0,-1);
-
     MyXHR('get',{method:'updateLobby',a:'lobby',data: lobbyString}).done(function(json){
         //create elements for lobby users
         for(const user of json['addInLobby']){
@@ -57,24 +56,28 @@ function initUpdateLobby(){
             $("#user_"+currID).remove();
         }
     });
-    //initUpdateChallenges();
-    //setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
+    initUpdateChallenges();
+    setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
 }
 
 function initUpdateChallenges(){
     //lobbyString = all user IDs in lobby separated by _
     lobbyString = "";
+    console.log($(".challenge"));
     $(".challenge").each(function(ind,ele){
         lobbyString += ele.id.split("_")[1]+"_";
     });
     //remove the extra _
     lobbyString = lobbyString.slice(0,-1);
-   //  MyXHR('get',{method:'updateChallenges',a:'lobby',data: lobbyString}).done(function(json){
-   //      //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
-   //      //clear message box
-   //     // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
-   //
-   // });
+
+    MyXHR('get',{method:'updateChallenges',a:'lobby',data: lobbyString}).done(function(json){
+        console.log("it works");
+        console.log(json);
+        //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
+        //clear message box
+       // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
+
+   });
 
 //lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
     //Update lobby user to show yes or no button, they should have the challengeID in them for passing
@@ -89,6 +92,7 @@ function initUpdateChallenges(){
 
 //TODO: Make an event listener for the challenge accept and deny button
 //if the accept button is clicked then put them both into a lobby
+//Right when it is accepted you initialize everything for the game
 
 /**
  * Front end call for sendChat

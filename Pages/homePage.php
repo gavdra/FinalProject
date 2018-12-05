@@ -14,7 +14,8 @@
         <link rel="stylesheet" href="../Styles/style.css">
         <title>Home Page</title>
     </head>
-    <body onload="initUpdateLobby();initGetChat();scrollHomepageChat();">
+    <body onload="initUpdateLobby();scrollHomepageChat();">
+    <!-- <body onload="initUpdateLobby();initGetChat();scrollHomepageChat();"> -->
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">

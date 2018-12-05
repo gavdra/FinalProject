@@ -20,10 +20,11 @@ function getOnlineUsers(){
     // code...
 }
 
-function getAllChallenges(){
+function getUserChallenges($userID){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("SELECT * FROM user WHERE onlineYN = 1")){
+        if ($stmt = $conn->prepare("SELECT * FROM Challenge WHERE userIDSend = ? OR userIDRec = ?")){
+            $stmt->bind_param("ii", intval($userID), intval($userID));
             $stmt->execute();
             return returnJson($stmt);
             $stmt->close();
