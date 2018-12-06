@@ -78,14 +78,6 @@ function updateChallenges($lobbyString){
         //challenge that lobby user sent to current user has been denied or timed out
             //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
     }
-    // echo "Lobby array: ";
-    // print_r($lobbyUserArray);
-    // echo "challenge array: ";
-    // print_r($challengeArray);
-    // foreach ($onlineUserArray as $ind => $user) {
-    //
-    // }
-    //array_push($returnJson['remove'],$value);
 
     echo json_encode($returnJson);
 }
@@ -101,6 +93,30 @@ function denyChallenge($challengeID){
 
     if ($_SESSION['userID'] == $sendID) echo json_encode(json_decode(getUserInfo($recID)));
     if ($_SESSION['userID'] == $recID) echo json_encode(json_decode(getUserInfo($sendID)));
-    //removeChallenge($challengeID);
+    removeChallenge($challengeID);
+}
+
+function getChallengeStatus($lobbyString){
+    $returnJson = array('updateRemoveSpinner'=>array(),'updateAddToGame'=>array());
+
+
+    $lobbyUserArray = explode("_",$lobbyString);
+    $sendUser = $_SESSION['userID'];
+    foreach ($lobbyUserArray as $ind => $recUserID) {
+        //send user, rec user
+        $currChallenge = json_decode(getChallengeByUsers($sendUser,$recUserID))[0];
+        if ($currChallenge->challengeID) {
+            //the challenge exists.
+            //if status is null do nothing
+            //if status is yes then add this user to
+            if (is_null($currChallenge->acceptedYN)){}
+            if($currChallenge->acceptedYN) array_push($returnJson['updateAddToGame'],$recUserID);
+        }
+        else {
+            array_push($returnJson['updateRemoveSpinner'],json_decode(getUserInfo($recUserID)));
+        }
     }
+
+    echo json_encode($returnJson);
+}
  ?>

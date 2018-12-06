@@ -56,7 +56,26 @@ function getUserChallenges($userID){
     catch(Exception $e){
         echo $e;
     }
-    // code...
+}
+
+
+function getChallengeByUsers($userIDSend,$userIDRec){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM Challenge WHERE userIDSend = ? AND userIDRec = ?")){
+            $stmt->bind_param("ii", intval($userIDSend), intval($userIDRec));
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
 }
 
 function getChallengeByID($challengeID){
@@ -76,7 +95,6 @@ function getChallengeByID($challengeID){
     catch(Exception $e){
         echo $e;
     }
-    // code...
 }
 
 function makeChallenge($sendID,$recID){

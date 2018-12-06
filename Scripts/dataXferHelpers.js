@@ -70,8 +70,6 @@ function initUpdateChallenges(){
     lobbyString = lobbyString.slice(0,-1);
 
     MyXHR('get',{method:'updateChallenges',a:'lobby',data: lobbyString}).done(function(json){
-        console.log("it works");
-        console.log(json);
         for (var i = 0; i < json['updateShowButtons'].length; i++) {
             userID = json['updateShowButtons'][i][0];//this is the userID
             challengeID = json['updateShowButtons'][i][1];//this is the challengeID to put into the button elements
@@ -92,45 +90,9 @@ function initUpdateChallenges(){
             $(lobbyEle).find('.mdl-spinner').remove();
             $(lobbyEle).append("<div class='mdl-spinner mdl-js-spinner is-active'></div>");
             componentHandler.upgradeDom();
-            // $($(lobbyEle).find('span')[1]).html("Has Challenged you!");
-            // $(lobbyEle).find('.adButtons').remove();
-            //$(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
         }
-        // for (var i = 0; i < json['updateRemoveButtons'].length; i++) {
-        //     console.log(json['updateRemoveButtons'][i][0]);
-        //     userID = json['updateRemoveButtons'][i][0]['userID'];//this is the userID
-        //     //challengeID = json['updateRemoveButtons'][i][1];//this is the challengeID to put into the button elements
-        //     lobbyEle = $("#user_"+userID);
-        //     $(lobbyEle).find(".adButtons").remove();
-        //     $($(lobbyEle).find('span')[1]).html("Wins: "+json['updateRemoveButtons'][i][0]['gamesWon']);
-        //     $(lobbyEle).find('button').remove();
-        //     $(lobbyEle).append("<button onclick='sendChallenge("+userID+")'class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
-        //     // $(lobbyEle).find('button').remove();
-        //     // $($(lobbyEle).find('span')[1]).html("Awaiting response");
-        //     // $(lobbyEle).find('.mdl-spinner').remove();
-        //     // $(lobbyEle).append("<div class='mdl-spinner mdl-js-spinner is-active'></div>");
-        //     // $($(lobbyEle).find('span')[1]).html("Has Challenged you!");
-        //     // $(lobbyEle).find('.adButtons').remove();
-        //     //$(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
-        // }
-
-        // for(const user of json['updateRemoveButtons']){
-        //     console.log(user);
-        //     var lobbyEle = "<div id='user_"+user['userID']+"' class='challenge mdl-color--primary'>";
-        //     lobbyEle = $("#user_"+user['userID']);
-        //     console.log($(lobbyEle));
-        //     //newLobbyUser += "<span class='challengeTxt challengeName'>"+user['username']+"</span>";
-        //     //newLobbyUser += "<span class='challengeTxt'>Wins: "+user['gamesWon']+"</span>";
-        //     //newLobbyUser += "<button class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>";
-        //     //$(".challengeContainer").append(newLobbyUser);
-        // }
-
-        //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
-        //clear message box
-       // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat
-
+        checkChallengeStatus();
    });
-
 //lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
     //Update lobby user to show yes or no button, they should have the challengeID in them for passing
 //current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
@@ -152,6 +114,39 @@ function initDenyChallenge(challengeID,ele){
         $(ele).parent().parent().append("<button onclick='initSendChallenge("+json[0]['userID']+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
         $(ele).parent().remove();
     });
+}
+
+function checkChallengeStatus(){
+    lobbyString = "";
+    $('div').find('.mdl-spinner').parent().each(function(i,ele){
+        lobbyString += ele.id.split("_")[1]+"_";
+    });
+    lobbyString = lobbyString.slice(0,-1);
+
+    MyXHR('get',{method:'getChallengeStatus',a:'lobby',data:lobbyString}).done(function(json){
+
+        //for each user in this list update UI back to normal
+        //DO this before checking other list so it updates before sending them to a game
+        for (var i = 0; i < json['updateRemoveSpinner'].length; i++) {
+            userID = json['updateRemoveSpinner'][i][0]['userID'];
+            gamesWon = json['updateRemoveSpinner'][i][0]['gamesWon'];
+            lobbyEle = $("#user_"+userID);
+            $($(lobbyEle).find('span')[1]).html('Wins: '+ gamesWon);
+            $(lobbyEle).find('.mdl-spinner').remove();
+            $(lobbyEle).append("<button onclick='initSendChallenge("+userID+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
+        }
+        // for (i = 0; i <json['updateRemoveSpinner'][0].length;i++){
+        //     currUser = json['updateRemoveSpinner'][0][i];
+        //     console.log(currUser);
+        //     console.log(currUser['userID']);
+        // }
+
+        //If this is populated then a game has been accepted. It contains just the userID of the person who accepted the game
+        //call a function to add the current user to a lobby
+        //Find the lobby ID by checking against the user from json
+        console.log(json['updateAddToGame'][0]);
+    });
+
 }
 
 //TODO: Make an event listener for the challenge accept and deny button
