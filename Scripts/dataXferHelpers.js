@@ -57,13 +57,12 @@ function initUpdateLobby(){
         }
     });
     initUpdateChallenges();
-    setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
+    setTimeout('initUpdateLobby()',10000); //keeping this for future ref to put at bottom of getChat
 }
 
 function initUpdateChallenges(){
     //lobbyString = all user IDs in lobby separated by _
     lobbyString = "";
-    console.log($(".challenge"));
     $(".challenge").each(function(ind,ele){
         lobbyString += ele.id.split("_")[1]+"_";
     });
@@ -73,6 +72,29 @@ function initUpdateChallenges(){
     MyXHR('get',{method:'updateChallenges',a:'lobby',data: lobbyString}).done(function(json){
         console.log("it works");
         console.log(json);
+        for (var i = 0; i < json['updateShowButtons'].length; i++) {
+            userID = json['updateShowButtons'][i][0];//this is the userID
+            challengeID = json['updateShowButtons'][i][1];//this is the challengeID to put into the button elements
+            lobbyEle = $("#user_"+userID);
+            $(lobbyEle).find('button').remove();
+            $($(lobbyEle).find('span')[1]).html("Has Challenged you!");
+            $(lobbyEle).find('.adButtons').remove();
+            $(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
+        }
+
+        for (var i = 0; i < json['updateShowSpinner'].length; i++) {
+            userID = json['updateShowSpinner'][i][0];//this is the userID
+            challengeID = json['updateShowSpinner'][i][1];//this is the challengeID to put into the button elements
+            lobbyEle = $("#user_"+userID);
+            $(lobbyEle).find('button').remove();
+            $(lobbyEle).find('.mdl-spinner').remove();
+            $(lobbyEle).append("<div class='mdl-spinner mdl-js-spinner is-active'></div>");
+            componentHandler.upgradeDom();
+            // $($(lobbyEle).find('span')[1]).html("Has Challenged you!");
+            // $(lobbyEle).find('.adButtons').remove();
+            //$(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
+        }
+
         //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
         //clear message box
        // setTimeout('getChat()',2000); keeping this for future ref to put at bottom of getChat

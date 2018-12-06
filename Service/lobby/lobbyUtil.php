@@ -45,7 +45,7 @@ function updateLobby($lobbyString){
 }
 
 function updateChallenges($lobbyString){
-    $returnJson = array('updateShowButtons'=>array(),'updateShowSpinner'=>array(),'updateRemoveButtons'=>array(),'updateRemoveSpinner'=>array());
+    $returnJson = array('updateShowButtons'=>array(),'updateShowSpinner'=>array(),'updateRemoveButtons'=>array(),'updateRemoveSpinner'=>array(),'challengeID'=>array());
 
     $lobbyUserArray = explode("_",$lobbyString);
 
@@ -59,7 +59,7 @@ function updateChallenges($lobbyString){
 
         //lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
         if ($currChallenge->userIDRec == $_SESSION['userID']){
-            if (in_array($currChallenge->userIDSend,$lobbyUserArray)) array_push($returnJson['updateShowButtons'],$currChallenge->userIDSend);
+            if (in_array($currChallenge->userIDSend,$lobbyUserArray)) array_push($returnJson['updateShowButtons'],array($currChallenge->userIDSend,$currChallenge->challengeID));
         }
             //Update lobby user to show yes or no button, they should have the challengeID in them for passing
 
@@ -67,7 +67,7 @@ function updateChallenges($lobbyString){
         //
         // //current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
         if ($currChallenge->userIDSend == $_SESSION['userID']){
-            if(in_array($currChallenge->userIDRec,$lobbyUserArray)) array_push($returnJson['updateShowSpinner'],$currChallenge->userIDRec);
+            if(in_array($currChallenge->userIDRec,$lobbyUserArray)) array_push($returnJson['updateShowSpinner'],array($currChallenge->userIDRec,$currChallenge->challengeID));
         }
             //update the lobby user to show a spinner
         //challenge that current user sent to lobby user has been denied or timed out

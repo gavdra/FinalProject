@@ -20,6 +20,25 @@ function getOnlineUsers(){
     // code...
 }
 
+function getUserInfo($userID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM user WHERE userID = ?")){
+            $stmt->bind_param("i", intval($userID));
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
 function getUserChallenges($userID){
     global $conn; //mysql connection object from dbInfo
     try{
