@@ -16,7 +16,7 @@ function initUpdateLobby(){
             var newLobbyUser = "<div id='user_"+user['userID']+"' class='challenge mdl-color--primary'>";
             newLobbyUser += "<span class='challengeTxt challengeName'>"+user['username']+"</span>";
             newLobbyUser += "<span class='challengeTxt'>Wins: "+user['gamesWon']+"</span>";
-            newLobbyUser += "<button class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>";
+            newLobbyUser += "<button onclick='initSendChallenge("+user['userID']+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>";
             $(".challengeContainer").append(newLobbyUser);
         }
         //create elements for in game users
@@ -24,7 +24,7 @@ function initUpdateLobby(){
             var newGameUser = "<div id='user_"+user['userID']+"' class='challenge mdl-color--primary inGame'>";
             newGameUser += "<span class='challengeTxt challengeName'>"+user['username']+"</span>";
             newGameUser += "<span class='challengeTxt'>Wins: "+user['gamesWon']+"</span>";
-            newGameUser += "<button class='mdl-button mdl-js-button' type='button' name='button' disabled>IN GAME</button></div>";
+            newGameUser += "<button onclick='initSendChallenge("+user['userID']+")'class='mdl-button mdl-js-button' type='button' name='button' disabled>IN GAME</button></div>";
             $(".challengeContainer").append(newGameUser);
         }
         //find all users in the lobby to make sure they are styled correctly
@@ -78,8 +78,9 @@ function initUpdateChallenges(){
             lobbyEle = $("#user_"+userID);
             $(lobbyEle).find('button').remove();
             $($(lobbyEle).find('span')[1]).html("Has Challenged you!");
+            $(lobbyEle).find('.mdl-spinner').remove();
             $(lobbyEle).find('.adButtons').remove();
-            $(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
+            $(lobbyEle).append("<div class='adButtons'> <button onclick='initAcceptChallenge("+challengeID+",this)' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='initDenyChallenge("+challengeID+",this)' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
         }
 
         for (var i = 0; i < json['updateShowSpinner'].length; i++) {
@@ -87,6 +88,7 @@ function initUpdateChallenges(){
             challengeID = json['updateShowSpinner'][i][1];//this is the challengeID to put into the button elements
             lobbyEle = $("#user_"+userID);
             $(lobbyEle).find('button').remove();
+            $($(lobbyEle).find('span')[1]).html("Awaiting response");
             $(lobbyEle).find('.mdl-spinner').remove();
             $(lobbyEle).append("<div class='mdl-spinner mdl-js-spinner is-active'></div>");
             componentHandler.upgradeDom();
@@ -94,6 +96,34 @@ function initUpdateChallenges(){
             // $(lobbyEle).find('.adButtons').remove();
             //$(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
         }
+        // for (var i = 0; i < json['updateRemoveButtons'].length; i++) {
+        //     console.log(json['updateRemoveButtons'][i][0]);
+        //     userID = json['updateRemoveButtons'][i][0]['userID'];//this is the userID
+        //     //challengeID = json['updateRemoveButtons'][i][1];//this is the challengeID to put into the button elements
+        //     lobbyEle = $("#user_"+userID);
+        //     $(lobbyEle).find(".adButtons").remove();
+        //     $($(lobbyEle).find('span')[1]).html("Wins: "+json['updateRemoveButtons'][i][0]['gamesWon']);
+        //     $(lobbyEle).find('button').remove();
+        //     $(lobbyEle).append("<button onclick='sendChallenge("+userID+")'class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
+        //     // $(lobbyEle).find('button').remove();
+        //     // $($(lobbyEle).find('span')[1]).html("Awaiting response");
+        //     // $(lobbyEle).find('.mdl-spinner').remove();
+        //     // $(lobbyEle).append("<div class='mdl-spinner mdl-js-spinner is-active'></div>");
+        //     // $($(lobbyEle).find('span')[1]).html("Has Challenged you!");
+        //     // $(lobbyEle).find('.adButtons').remove();
+        //     //$(lobbyEle).append("<div class='adButtons'> <button onclick='acceptChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>done</i></button><button onclick='denyChallenge("+challengeID+")' class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>not_interested</i></button></div>");
+        // }
+
+        // for(const user of json['updateRemoveButtons']){
+        //     console.log(user);
+        //     var lobbyEle = "<div id='user_"+user['userID']+"' class='challenge mdl-color--primary'>";
+        //     lobbyEle = $("#user_"+user['userID']);
+        //     console.log($(lobbyEle));
+        //     //newLobbyUser += "<span class='challengeTxt challengeName'>"+user['username']+"</span>";
+        //     //newLobbyUser += "<span class='challengeTxt'>Wins: "+user['gamesWon']+"</span>";
+        //     //newLobbyUser += "<button class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>";
+        //     //$(".challengeContainer").append(newLobbyUser);
+        // }
 
         //call getChat explicitly so they dont have to wait 2 seconds to see their message send.
         //clear message box
@@ -110,6 +140,18 @@ function initUpdateChallenges(){
 //challenge that lobby user sent to current user has been denied or timed out
     //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
 
+}
+
+function initSendChallenge(userToChallenge){
+    MyXHR('post',{method:'sendChallenge',a:'lobby',data: userToChallenge}).done(function(json){});
+}
+
+function initDenyChallenge(challengeID,ele){
+    MyXHR('post',{method:'denyChallenge',a:'lobby',data: challengeID}).done(function(json){
+        $($(ele).parent().parent().find('span')[1]).html('Wins: '+ json[0]['gamesWon']);
+        $(ele).parent().parent().append("<button onclick='initSendChallenge("+json[0]['userID']+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
+        $(ele).parent().remove();
+    });
 }
 
 //TODO: Make an event listener for the challenge accept and deny button

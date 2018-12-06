@@ -59,6 +59,61 @@ function getUserChallenges($userID){
     // code...
 }
 
+function getChallengeByID($challengeID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM Challenge WHERE challengeID = ?")){
+            $stmt->bind_param("i", intval($challengeID));
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+    // code...
+}
+
+function makeChallenge($sendID,$recID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("INSERT INTO Challenge (userIDSend,userIDRec) VALUES (?,?)")){
+            $stmt->bind_param("ii", intval($sendID), intval($recID));
+            $stmt->execute();
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function removeChallenge($challengeID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("DELETE from Challenge WHERE challengeID = ?")){
+            $stmt->bind_param("i", intval($challengeID));
+            $stmt->execute();
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
 
 function returnJson ($stmt){
 	$stmt->execute();

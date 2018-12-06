@@ -57,17 +57,20 @@ function updateChallenges($lobbyString){
         //userIDSend, userIDRec, acceptedYN, challengeID
         //in_array($needle, $haystack)
 
-        //lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
+        //lobby user has sent a challenge to the current user. accepted status is still null
         if ($currChallenge->userIDRec == $_SESSION['userID']){
-            if (in_array($currChallenge->userIDSend,$lobbyUserArray)) array_push($returnJson['updateShowButtons'],array($currChallenge->userIDSend,$currChallenge->challengeID));
+            if (in_array($currChallenge->userIDSend,$lobbyUserArray) && is_null($currChallenge->acceptedYN)){
+                array_push($returnJson['updateShowButtons'],array($currChallenge->userIDSend,$currChallenge->challengeID));
+            }
+            else if (in_array($currChallenge->userIDSend,$lobbyUserArray) && $currChallenge->acceptedYN == 0){
+                array_push($returnJson['updateRemoveButtons'],json_decode(getUserInfo($currChallenge->userIDSend)));
+            }
+
         }
-            //Update lobby user to show yes or no button, they should have the challengeID in them for passing
 
-
-        //
-        // //current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
+        //current user has sent a challenge to the lobby user. accepted status is still null
         if ($currChallenge->userIDSend == $_SESSION['userID']){
-            if(in_array($currChallenge->userIDRec,$lobbyUserArray)) array_push($returnJson['updateShowSpinner'],array($currChallenge->userIDRec,$currChallenge->challengeID));
+            if(in_array($currChallenge->userIDRec,$lobbyUserArray) && is_null($currChallenge->acceptedYN)) array_push($returnJson['updateShowSpinner'],array($currChallenge->userIDRec,$currChallenge->challengeID));
         }
             //update the lobby user to show a spinner
         //challenge that current user sent to lobby user has been denied or timed out
@@ -86,4 +89,18 @@ function updateChallenges($lobbyString){
 
     echo json_encode($returnJson);
 }
+
+function sendChallenge($userIDRec){
+    makeChallenge($_SESSION['userID'],$userIDRec);
+}
+
+function denyChallenge($challengeID){
+    $challengeArray = json_decode(getChallengeByID($challengeID));
+    $sendID = $challengeArray[0]->userIDSend;
+    $recID = $challengeArray[0]->userIDRec;
+
+    if ($_SESSION['userID'] == $sendID) echo json_encode(json_decode(getUserInfo($recID)));
+    if ($_SESSION['userID'] == $recID) echo json_encode(json_decode(getUserInfo($sendID)));
+    //removeChallenge($challengeID);
+    }
  ?>
