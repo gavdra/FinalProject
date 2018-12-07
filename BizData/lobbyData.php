@@ -100,14 +100,14 @@ function getChallengeByID($challengeID){
 function makeChallenge($sendID,$recID){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("INSERT INTO Challenge (userIDSend,userIDRec) VALUES (?,?)")){
+        if ($stmt = $conn->prepare("INSERT INTO challenge (userIDSend,userIDRec) VALUES (?,?)")){
             $stmt->bind_param("ii", intval($sendID), intval($recID));
             $stmt->execute();
             $stmt->close();
             $conn->close();
         }
         else{
-            throw new Exception("you done goofed");
+            //throw new Exception("you done goofed");
         }
     }
     catch(Exception $e){

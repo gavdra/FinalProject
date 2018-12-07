@@ -35,6 +35,10 @@
             <div class="page-content mdl-grid">
                 <div class="mdl-cell mdl-cell--4-col">
                 </div>
+                <div class="mdl-cell mdl-cell--4-col">
+                </div>
+                <div class="mdl-cell mdl-cell--4-col">
+                </div>
 
                 <div class="mdl-cell mdl-cell--4-col outline">
                 </div>

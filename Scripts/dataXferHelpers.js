@@ -97,6 +97,7 @@ function initUpdateChallenges(){
 }
 
 function initSendChallenge(userToChallenge){
+    console.log("here");
     MyXHR('post',{method:'sendChallenge',a:'lobby',data: userToChallenge}).done(function(json){});
 }
 
@@ -128,12 +129,14 @@ function checkChallengeStatus(){
         //for each user in this list update UI back to normal
         //DO this before checking other list so it updates before sending them to a game
         for (var i = 0; i < json['updateRemoveSpinner'].length; i++) {
-            userID = json['updateRemoveSpinner'][i][0]['userID'];
-            gamesWon = json['updateRemoveSpinner'][i][0]['gamesWon'];
-            lobbyEle = $("#user_"+userID);
-            $($(lobbyEle).find('span')[1]).html('Wins: '+ gamesWon);
-            $(lobbyEle).find('.mdl-spinner').remove();
-            $(lobbyEle).append("<button onclick='initSendChallenge("+userID+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
+            if (json['updateRemoveSpinner'][i] != null){
+                userID = json['updateRemoveSpinner'][i][0]['userID'];
+                gamesWon = json['updateRemoveSpinner'][i][0]['gamesWon'];
+                lobbyEle = $("#user_"+userID);
+                $($(lobbyEle).find('span')[1]).html('Wins: '+ gamesWon);
+                $(lobbyEle).find('.mdl-spinner').remove();
+                $(lobbyEle).append("<button onclick='initSendChallenge("+userID+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
+            }
         }
 
 
@@ -141,8 +144,10 @@ function checkChallengeStatus(){
         //If this is populated then a game has been accepted. It contains just the userID of the person who accepted the game
         //call a function to add the current user to a lobby
         //Find the lobby ID by checking against the user from json
-        if(json['updateAddToGame'][0]['acceptedYN']){
-            window.location.href = "inGame.php?lobbyID="+json['addGameLobby'][0]['lobbyID']+"&p1="+json['updateAddToGame'][0]['userIDRec']+"&p2="+json['updateAddToGame'][0]['userIDSend'];
+        if(json['updateAddToGame'][0] != null){
+            if(json['updateAddToGame'][0]['acceptedYN']){
+                window.location.href = "inGame.php?lobbyID="+json['addGameLobby'][0]['lobbyID']+"&p1="+json['updateAddToGame'][0]['userIDRec']+"&p2="+json['updateAddToGame'][0]['userIDSend'];
+            }
         }
     });
 
