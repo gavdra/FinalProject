@@ -116,6 +116,14 @@ function initDenyChallenge(challengeID,ele){
     });
 }
 
+function initAcceptChallenge(challengeID,ele){
+    MyXHR('post',{method:'acceptChallenge',a:'lobby',data: challengeID}).done(function(json){
+        window.location.href = "inGame.php?lobbyID="+json['lobby']+"&p1="+json['p1']+"&p2="+json['p2'];
+        //after everything has been put into the database redirect to ingame.php?lobbyID=json['lobby']&p1=json['p1']&p2=json['p2']
+    });
+
+}
+
 function checkChallengeStatus(){
     lobbyString = "";
     $('div').find('.mdl-spinner').parent().each(function(i,ele){
@@ -135,11 +143,8 @@ function checkChallengeStatus(){
             $(lobbyEle).find('.mdl-spinner').remove();
             $(lobbyEle).append("<button onclick='initSendChallenge("+userID+")' class='mdl-button mdl-js-button' type='button' name='button'>CHALLENGE</button></div>");
         }
-        // for (i = 0; i <json['updateRemoveSpinner'][0].length;i++){
-        //     currUser = json['updateRemoveSpinner'][0][i];
-        //     console.log(currUser);
-        //     console.log(currUser['userID']);
-        // }
+
+
 
         //If this is populated then a game has been accepted. It contains just the userID of the person who accepted the game
         //call a function to add the current user to a lobby

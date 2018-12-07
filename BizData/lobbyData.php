@@ -114,7 +114,6 @@ function makeChallenge($sendID,$recID){
         echo $e;
     }
 }
-
 function removeChallenge($challengeID){
     global $conn; //mysql connection object from dbInfo
     try{
@@ -132,6 +131,108 @@ function removeChallenge($challengeID){
         echo $e;
     }
 }
+
+function updateAcceptChallenge($challengeID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("UPDATE Challenge SET acceptedYN = 1 WHERE challengeID = ?")){
+            $stmt->bind_param("i", intval($challengeID));
+            $stmt->execute();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function makeGameLobby($pOneID,$pTwoID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("INSERT INTO gameLobby (playerOneID,playerTwoID) VALUES (?,?)")){
+            $stmt->bind_param("ii", intval($pOneID),intval($pTwoID));
+            $stmt->execute();
+        }
+        else{
+            print_r($stmt);
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function initializeUserGameState($lobbyID,$userID,$cardArray){
+    //insert into userGameState($lobbyID,$userID,$cardArray[0],$cardArray[1],$cardArray[2],0)
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("INSERT INTO userGameState (lobbyID,userID,card1,card2,card3,turnYN) VALUES (?,?,?,?,?,0)")){
+            $stmt->bind_param("iisss", intval($lobbyID),intval($userID),$cardArray[0],$cardArray[1],$cardArray[2]);
+            $stmt->execute();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function initializeDeckTopCard($lobbyID,$card){
+    //insert into gameTopCard()
+    //insert into userGameState($lobbyID,$userID,$cardArray[0],$cardArray[1],$cardArray[2],0)
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("INSERT INTO gameTopCard (lobbyID,topCardName) VALUES (?,?)")){
+            $stmt->bind_param("is", intval($lobbyID),$card);
+            $stmt->execute();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+function addLobbyDeckCard($lobbyID,$card){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("INSERT INTO gameDeckCards (lobbyID,cardName) VALUES (?,?)")){
+            $stmt->bind_param("is", intval($lobbyID),$card);
+            $stmt->execute();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function getLobbyIDByPlayers($pOneID,$pTwoID){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT lobbyID from gameLobby WHERE playerOneID = ? AND playerTwoID = ?")){
+            $stmt->bind_param("ii", intval($pOneID),intval($pTwoID));
+            $stmt->execute();
+            return returnJson($stmt);
+        }
+        else{
+            print_r($stmt);
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
 
 function returnJson ($stmt){
 	$stmt->execute();

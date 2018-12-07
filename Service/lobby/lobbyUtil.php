@@ -96,6 +96,57 @@ function denyChallenge($challengeID){
     removeChallenge($challengeID);
 }
 
+function acceptChallenge($challengeID){
+    //create array of 52 cards
+    $fullDeckArray = makeFullDeck();
+    Shuffle($fullDeckArray);
+    $pOneArray = array();
+    $pTwoArray = array();
+    $cardCount = 0;
+    while ($cardCount < 3) {
+        //get a random number between 0 the size of the deck.
+        //get the index for that card and add it to the card array
+        //remove it
+        $cardOneInd = rand(0,intval(count($fullDeckArray)-1));
+        $pOneArray[]= $fullDeckArray[$cardOneInd];
+        unset($fullDeckArray[$cardOneInd]);
+
+        $cardTwoInd = rand(0,intval(count($fullDeckArray)-1));
+        $pTwoArray[]= $fullDeckArray[$cardTwoInd];
+        unset($fullDeckArray[$cardTwoInd]);
+
+        if ($cardCount == 2){
+            $cardThreeInd = rand(0,intval(count($fullDeckArray)-1));
+            $topCard = $fullDeckArray[$cardThreeInd];
+            unset($fullDeckArray[$cardThreeInd]);
+        }
+        $cardCount++;
+    }
+    //update so acceptedYN is 1 for challengeID
+    //updateAcceptChallenge($challengeID);
+    //store both of the users from the challenge.
+    $challengeArray = json_decode(getChallengeByID($challengeID));
+    //make player1 userIDRec, player 2 userIDSend
+    $recID = $challengeArray[0]->userIDRec;
+    $sendID = $challengeArray[0]->userIDSend;
+
+    makeGameLobby($recID,$sendID);
+    //get the lobbyID from this insert^
+    $lobbyID = json_decode(getLobbyIDByPlayers($recID,$sendID))[0]->lobbyID;
+
+    //insert into userGameState(lobbyID,playerID,cardArray)
+    initializeUserGameState($lobbyID,$recID,$pOneArray);
+    initializeUserGameState($lobbyID,$sendID,$pTwoArray);
+    //insert into gameTopCard(lobbyID,topCard)from array at first
+    initializeDeckTopCard($lobbyID,$topCard);
+    //loop through the rest of the deck array and insert into gameDeckCards(lobbyID,currCard)
+    foreach ($fullDeckArray as $currCard) {
+        addLobbyDeckCard($lobbyID,$currCard);
+    }
+
+    echo json_encode(array("lobby"=>$lobbyID,"p1"=>$recID,"p2"=>$sendID));
+}
+
 function getChallengeStatus($lobbyString){
     $returnJson = array('updateRemoveSpinner'=>array(),'updateAddToGame'=>array());
 
@@ -118,5 +169,12 @@ function getChallengeStatus($lobbyString){
     }
 
     echo json_encode($returnJson);
+}
+
+function makeFullDeck(){
+    return array('diamond_1','diamond_2','diamond_3','diamond_4','diamond_5','diamond_6','diamond_7','diamond_8','diamond_9','diamond_10','diamond_jack','diamond_queen','diamond_king',
+                 'heart_1','heart_2','heart_3','heart_4','heart_5','heart_6','heart_7','heart_8','heart_9','heart_10','heart_jack','heart_queen','heart_king',
+                 'spade_1','spade_2','spade_3','spade_4','spade_5','spade_6','spade_7','spade_8','spade_9','spade_10','spade_jack','spade_queen','spade_king',
+                 'club_1','club_2','club_3','club_4','club_5','club_6','club_7','club_8','club_9','club_10','club_jack','club_queen','club_king');
 }
  ?>
