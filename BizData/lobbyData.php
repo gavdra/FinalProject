@@ -42,7 +42,7 @@ function getUserInfo($userID){
 function getUserChallenges($userID){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("SELECT * FROM Challenge WHERE userIDSend = ? OR userIDRec = ?")){
+        if ($stmt = $conn->prepare("SELECT * FROM challenge WHERE userIDSend = ? OR userIDRec = ?")){
             $stmt->bind_param("ii", intval($userID), intval($userID));
             $stmt->execute();
             return returnJson($stmt);
@@ -62,7 +62,7 @@ function getUserChallenges($userID){
 function getChallengeByUsers($userIDSend,$userIDRec){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("SELECT * FROM Challenge WHERE userIDSend = ? AND userIDRec = ?")){
+        if ($stmt = $conn->prepare("SELECT * FROM challenge WHERE userIDSend = ? AND userIDRec = ?")){
             $stmt->bind_param("ii", intval($userIDSend), intval($userIDRec));
             $stmt->execute();
             return returnJson($stmt);
@@ -81,7 +81,7 @@ function getChallengeByUsers($userIDSend,$userIDRec){
 function getChallengeByID($challengeID){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("SELECT * FROM Challenge WHERE challengeID = ?")){
+        if ($stmt = $conn->prepare("SELECT * FROM challenge WHERE challengeID = ?")){
             $stmt->bind_param("i", intval($challengeID));
             $stmt->execute();
             return returnJson($stmt);
@@ -117,7 +117,7 @@ function makeChallenge($sendID,$recID){
 function removeChallenge($challengeID){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("DELETE from Challenge WHERE challengeID = ?")){
+        if ($stmt = $conn->prepare("DELETE from challenge WHERE challengeID = ?")){
             $stmt->bind_param("i", intval($challengeID));
             $stmt->execute();
             $stmt->close();

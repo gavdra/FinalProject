@@ -123,7 +123,7 @@ function acceptChallenge($challengeID){
         $cardCount++;
     }
     //update so acceptedYN is 1 for challengeID
-    //updateAcceptChallenge($challengeID);
+    updateAcceptChallenge($challengeID);
     //store both of the users from the challenge.
     $challengeArray = json_decode(getChallengeByID($challengeID));
     //make player1 userIDRec, player 2 userIDSend
@@ -143,25 +143,27 @@ function acceptChallenge($challengeID){
     foreach ($fullDeckArray as $currCard) {
         addLobbyDeckCard($lobbyID,$currCard);
     }
-
+    $_SESSION['roomID'] = $lobbyID;
     echo json_encode(array("lobby"=>$lobbyID,"p1"=>$recID,"p2"=>$sendID));
 }
 
 function getChallengeStatus($lobbyString){
-    $returnJson = array('updateRemoveSpinner'=>array(),'updateAddToGame'=>array());
-
-
+    $returnJson = array('updateRemoveSpinner'=>array(),'updateAddToGame'=>array(),'addGameLobby'=>array());
     $lobbyUserArray = explode("_",$lobbyString);
     $sendUser = $_SESSION['userID'];
     foreach ($lobbyUserArray as $ind => $recUserID) {
         //send user, rec user
         $currChallenge = json_decode(getChallengeByUsers($sendUser,$recUserID))[0];
+        $currLobby = json_decode(getLobbyIDByPlayers($recUserID,$sendUser))[0];
         if ($currChallenge->challengeID) {
             //the challenge exists.
             //if status is null do nothing
             //if status is yes then add this user to
             if (is_null($currChallenge->acceptedYN)){}
-            if($currChallenge->acceptedYN) array_push($returnJson['updateAddToGame'],$recUserID);
+            if($currChallenge->acceptedYN){
+                    array_push($returnJson['updateAddToGame'],$currChallenge);
+                    array_push($returnJson['addGameLobby'],$currLobby);
+            }
         }
         else {
             array_push($returnJson['updateRemoveSpinner'],json_decode(getUserInfo($recUserID)));

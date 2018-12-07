@@ -60,6 +60,7 @@ function initUpdateLobby(){
     setTimeout('initUpdateLobby()',10000); //keeping this for future ref to put at bottom of getChat
 }
 
+//begin the series of challenges being searched for
 function initUpdateChallenges(){
     //lobbyString = all user IDs in lobby separated by _
     lobbyString = "";
@@ -93,15 +94,6 @@ function initUpdateChallenges(){
         }
         checkChallengeStatus();
    });
-//lobby user has sent a challenge to the current user. accepted status is still null and it hasnt timed out
-    //Update lobby user to show yes or no button, they should have the challengeID in them for passing
-//current user has sent a challenge to the lobby user. accepted status is still null and it hasnt timed out
-    //update the lobby user to show a spinner
-//challenge that current user sent to lobby user has been denied or timed out
-    //update lobby user that has the spinner to remove it and show standard view. THIS NEEDS ALL OF THE USERS INFO
-//challenge that lobby user sent to current user has been denied or timed out
-    //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
-
 }
 
 function initSendChallenge(userToChallenge){
@@ -149,14 +141,13 @@ function checkChallengeStatus(){
         //If this is populated then a game has been accepted. It contains just the userID of the person who accepted the game
         //call a function to add the current user to a lobby
         //Find the lobby ID by checking against the user from json
-        console.log(json['updateAddToGame'][0]);
+        if(json['updateAddToGame'][0]['acceptedYN']){
+            window.location.href = "inGame.php?lobbyID="+json['addGameLobby'][0]['lobbyID']+"&p1="+json['updateAddToGame'][0]['userIDRec']+"&p2="+json['updateAddToGame'][0]['userIDSend'];
+        }
     });
 
 }
 
-//TODO: Make an event listener for the challenge accept and deny button
-//if the accept button is clicked then put them both into a lobby
-//Right when it is accepted you initialize everything for the game
 
 /**
  * Front end call for sendChat
