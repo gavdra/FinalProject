@@ -6,13 +6,10 @@
     //check Authorizations (sessions)
     //prep data to call data layer stuff
     function updateCards(){
-        $returnJson = array('card1' => '','card2' => '','card3' => '','topCard' => '' );
-        //getCards($_SESSION['rooomID'],$_SESSION['userID']);
-        getCards($_SESSION['roomID'],$_SESSION['userID']);
-        //insertChat($messageData['messageText'],$_SESSION['userID'],$_SESSION['roomID']); //database call to insert chat into DB
-        //
+        $userCards = json_decode(getUserCardsByLobby($_SESSION['roomID'],$_SESSION['userID']));
+        $topCard = json_decode(getTopCardByLobby($_SESSION['roomID']));
+        $returnJson = array('card1' => $userCards[0]->card1,'card2' => $userCards[0]->card2,'card3' => $userCards[0]->card3,'topCard' => $topCard[0]->topCardName );
         echo json_encode($returnJson);
-
     }
 
  ?>

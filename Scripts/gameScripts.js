@@ -8,6 +8,7 @@ function initUpdateCards(){
 
     MyXHR('get',{method:'updateCards',a:'game'}).done(function(json){
         console.log("It worked. cards are: ");
+        console.log(json);
     });
 
     // var card1 = SVG('card1').size(200,500);
@@ -30,6 +31,11 @@ function initUpdateCards(){
 }
 
 function checkTurn(){
+
+    MyXHR('get',{method:'checkTurn',a:'game'}).done(function(json){
+        //if it is this users turn update the board to show necessary onclicks
+        //if it is not this users turn update the board to remove and disable stuff
+    });
 }
 function randomIntFromInterval(min,max){
     return Math.floor(Math.random()*(max-min+1)+min);

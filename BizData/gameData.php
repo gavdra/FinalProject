@@ -1,10 +1,43 @@
 <?php
 require_once("dbInfo.inc");
 
-function getCards($lobbyID,$userID){
-	//get all cards for this user.
-	//get cards from usergameState
-	//get top card
+function getUserCardsByLobby($lobbyID,$userID){
+
+	global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM userGameState WHERE userID = ? AND lobbyID = ?")){
+            $stmt->bind_param("ii", intval($userID), intval($lobbyID));
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function getTopCardByLobby($lobbyID){
+	global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM gameTopCard WHERE lobbyID = ?")){
+            $stmt->bind_param("i",intval($lobbyID));
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
 }
 
 //stmt with all params already bound (or no params at all)
