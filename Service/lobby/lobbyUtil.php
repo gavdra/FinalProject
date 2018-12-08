@@ -144,6 +144,7 @@ function acceptChallenge($challengeID){
         addLobbyDeckCard($lobbyID,$currCard);
     }
     $_SESSION['roomID'] = $lobbyID;
+    sleep(1);
     echo json_encode(array("lobby"=>$lobbyID,"p1"=>$recID,"p2"=>$sendID));
 }
 

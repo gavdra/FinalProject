@@ -17,7 +17,7 @@
         <title>In Game</title>
     </head>
     <!-- <body onload="initGetChat();"> -->
-    <body onload="checkTurn();initUpdateCards();">
+    <body onload="initUpdateSession();initCheckTurn();initUpdateCards();">
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">

@@ -12,4 +12,27 @@
         echo json_encode($returnJson);
     }
 
+    function updateSession($lobbyID){
+        $_SESSION['roomID']=$lobbyID;
+    }
+
+    function checkTurn(){
+        //select * from userGameState for this lobby
+        //$lobbyID = $_SESSION['roomID']
+        //for each
+            //if userID == $_SESSION['userID']. the current state is for this user
+                //if turnYN = 1
+                //(and player 2 is still in game)
+                //some check for knocking (eventually)
+                    //send back it is this players turn. update the cards to be clickable
+                    //echo json_encode(array('turnYN' => 1));
+            //if userID != $_SESSION['userID']. the current state is not for this user
+                //if turnYN = 1
+                    // It is not this users turn. update the onclicks to be gone
+                    //echo json_encode(array('turnYN' => 0));
+            //if it is neither of their turn
+                //make a DB query to update so it is player 1 turn
+
+    }
+
  ?>

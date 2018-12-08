@@ -167,6 +167,7 @@ function makeGameLobby($pOneID,$pTwoID){
 
 function initializeUserGameState($lobbyID,$userID,$cardArray){
     //insert into userGameState($lobbyID,$userID,$cardArray[0],$cardArray[1],$cardArray[2],0)
+    //print_r()
     global $conn; //mysql connection object from dbInfo
     try{
         if ($stmt = $conn->prepare("INSERT INTO userGameState (lobbyID,userID,card1,card2,card3,turnYN) VALUES (?,?,?,?,?,0)")){

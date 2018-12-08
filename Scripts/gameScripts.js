@@ -30,15 +30,19 @@ function initUpdateCards(){
 
 }
 
-function checkTurn(){
+function initCheckTurn(){
 
     MyXHR('get',{method:'checkTurn',a:'game'}).done(function(json){
         //if it is this users turn update the board to show necessary onclicks
         //if it is not this users turn update the board to remove and disable stuff
     });
 }
-function randomIntFromInterval(min,max){
-    return Math.floor(Math.random()*(max-min+1)+min);
+
+function initUpdateSession(){
+    if(document.location.toString().indexOf('?') !== -1) {
+        lobbyID = document.location.toString().split('?')[1].split('&')[0].split("=")[1];
+    }
+    MyXHR('get',{method:'updateSession',a:'game',data:lobbyID}).done(function(json){});
 }
 
 
