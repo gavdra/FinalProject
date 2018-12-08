@@ -146,7 +146,9 @@ function checkChallengeStatus(){
         //Find the lobby ID by checking against the user from json
         if(json['updateAddToGame'][0] != null){
             if(json['updateAddToGame'][0]['acceptedYN']){
-                window.location.href = "inGame.php?lobbyID="+json['addGameLobby'][0]['lobbyID']+"&p1="+json['updateAddToGame'][0]['userIDRec']+"&p2="+json['updateAddToGame'][0]['userIDSend'];
+                setTimeout(function(){
+                    window.location.href = "inGame.php?lobbyID="+json['addGameLobby'][0]['lobbyID']+"&p1="+json['updateAddToGame'][0]['userIDRec']+"&p2="+json['updateAddToGame'][0]['userIDSend'];
+                },3000);
             }
         }
     });

@@ -1,0 +1,48 @@
+#card3{
+    display: inline-block;
+    margin-top: 370px;
+    width: 200px;
+    height: 250px;
+    display: none;
+}
+#card1,#card2{
+    margin-top: 100px;
+    width: 200px;
+    height: 250px;
+    display: none;
+}
+
+#deck{
+    width: 200px;
+    height: 250px;
+    display: none;
+}
+#topCard{
+    margin-top: 20px;
+    width: 200px;
+    height: 250px;
+    display: none;
+}
+#deckCount{
+    display: none;
+}
+
+.knockButton {
+    margin-top: 500px;
+	-moz-box-shadow:inset 0px 39px 0px -24px #e67a73;
+	-webkit-box-shadow:inset 0px 39px 0px -24px #e67a73;
+	box-shadow:inset 0px 39px 0px -24px #e67a73;
+	background-color:#e4685d;
+	-moz-border-radius:25px;
+	-webkit-border-radius:25px;
+	border-radius:25px;
+	border:2px solid #ffffff;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:28px;
+	padding:11px 15px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #b23e35;
+}

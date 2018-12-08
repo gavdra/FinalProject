@@ -10,12 +10,14 @@
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
         <script src="../Scripts/dataXferHelpers.js" charset="utf-8"></script>
-        <script src="../Scripts/svgHelpers.js" charset="utf-8"></script>
+        <script src="../Scripts/gameScripts.js" charset="utf-8"></script>
         <script src="../Scripts/uiHelpers.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="../Styles/gameStyle.css">
         <link rel="stylesheet" href="../Styles/style.css">
         <title>In Game</title>
     </head>
-    <body onload="initGetChat();">
+    <!-- <body onload="initGetChat();"> -->
+    <body onload="checkTurn();initUpdateCards();">
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
@@ -33,14 +35,28 @@
           </header>
           <main class="mdl-layout__content">
             <div class="page-content mdl-grid">
-                <div class="mdl-cell mdl-cell--4-col">
+                <div class="mdl-cell mdl-cell--1-col"></div>
+                <div class="mdl-cell mdl-cell--2-col">
+                    <a href="#" class="knockButton">KNOCK</a>
                 </div>
-                <div class="mdl-cell mdl-cell--4-col">
+                <div class="mdl-cell mdl-cell--2-col">
+                    <span id="deckCount">Deck Count: 69</span>
+                    <div id="deck"></div>
+                    <div id="card1"></div>
                 </div>
-                <div class="mdl-cell mdl-cell--4-col">
+                <div class="mdl-cell mdl-cell--2-col">
+                    <h1 id="waitingMessage">Waiting<div class="mdl-spinner mdl-js-spinner is-active"></div></h1>
+                    <div id="topCard"></div>
+                    <div id="card2"></div>
                 </div>
-
-                <div class="mdl-cell mdl-cell--4-col outline">
+                <div class="mdl-cell mdl-cell--2-col">
+                    <div id="card3"></div>
+                </div>
+                <div class="mdl-cell mdl-cell--2-col">
+                    <h3>Current Lobby: </h3>
+                    <span>ID: 69</span>
+                    <span>players: 1, 2</span>
+                    <h3>Current Hand: 19</h3>
                 </div>
             </div>
             <div class="chatContainer">

@@ -135,7 +135,7 @@ function removeChallenge($challengeID){
 function updateAcceptChallenge($challengeID){
     global $conn; //mysql connection object from dbInfo
     try{
-        if ($stmt = $conn->prepare("UPDATE Challenge SET acceptedYN = 1 WHERE challengeID = ?")){
+        if ($stmt = $conn->prepare("UPDATE challenge SET acceptedYN = 1 WHERE challengeID = ?")){
             $stmt->bind_param("i", intval($challengeID));
             $stmt->execute();
         }
