@@ -6,7 +6,7 @@ var cards = ['diamond_1','diamond_2','diamond_3','diamond_4','diamond_5','diamon
 
 function initUpdateCards(){
 
-    MyXHR('get',{method:'updateCards',a:'game'}).done(function(json){
+    MyXHR('get',{method:'updateCardUI',a:'game'}).done(function(json){
         console.log("It worked. cards are: ");
         console.log(json);
     });
@@ -33,6 +33,8 @@ function initUpdateCards(){
 function initCheckTurn(){
 
     MyXHR('get',{method:'checkTurn',a:'game'}).done(function(json){
+        console.log("yay");
+        console.log(json);
         //if it is this users turn update the board to show necessary onclicks
         //if it is not this users turn update the board to remove and disable stuff
     });

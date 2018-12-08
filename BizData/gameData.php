@@ -40,6 +40,74 @@ function getTopCardByLobby($lobbyID){
     }
 }
 
+function getGameStateByLobby($lobbyID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("SELECT * FROM userGameState WHERE lobbyID = ?")){
+			$stmt->bind_param("i",intval($lobbyID));
+			$stmt->execute();
+			return returnJson($stmt);
+			$stmt->close();
+			$conn->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+//make it so it is this players turn.
+function updateLobbyTurn($lobbyID,$userID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET turnYN = 1 WHERE lobbyID = ? AND userID = ?")){
+			$stmt->bind_param("ii",intval($lobbyID),intval($userID));
+			$stmt->execute();
+			$stmt->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET turnYN = 0 WHERE lobbyID = ? AND userID = ?")){
+			$stmt->bind_param("ii",intval($lobbyID),intval(getOtherLobbyUser($lobbyID,$userID)));
+			$stmt->execute();
+			$stmt->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+function getOtherLobbyUser($lobbyID,$userID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("SELECT userID FROM userGameState WHERE lobbyID = ? AND userID != ?")){
+			$stmt->bind_param("ii",intval($lobbyID),intval($userID));
+			return json_decode(returnJson($stmt))[0]->userID;
+			$stmt->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
 //stmt with all params already bound (or no params at all)
 function returnJson ($stmt){
 	$stmt->execute();
