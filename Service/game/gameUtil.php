@@ -31,21 +31,59 @@
             if ($currState->userID != $_SESSION['userID'] && $currState->turnYN) echo json_encode(array('turnYN' => 0));
 
         }
+    }
 
-        //for each
-            //if userID == $_SESSION['userID']. the current state is for this user
-                //if turnYN = 1
-                //(and player 2 is still in game)
-                //some check for knocking (eventually)
-                    //send back it is this players turn. update the cards to be clickable
-                    //echo json_encode(array('turnYN' => 1));
-            //if userID != $_SESSION['userID']. the current state is not for this user
-                //if turnYN = 1
-                    // It is not this users turn. update the onclicks to be gone
-                    //echo json_encode(array('turnYN' => 0));
-            //if it is neither of their turn
-                //make a DB query to update so it is player 1 turn
+    function pickupTopCard(){
+        $lobbyID = $_SESSION['roomID'];
+        $userID = $_SESSION['userID'];
+        //get the top card for the lobby
+        //update the current user 4th card to be the top card
+    }
+    function drawFromDB(){
+        $lobbyID = $_SESSION['roomID'];
+        $userID = $_SESSION['userID'];
+
+        //get all of the cards for this lobbyid in an array
+        //find a random number between 0 and the count of the array - 1
+        //$cardArray[$randomNumber] = 'card_name'
+        //update the current user 4th card to be the card name
+        //delete from the deck using lobbyID and 'card_name'
 
     }
+
+    function checkScore(){
+        $lobbyID = $_SESSION['roomID'];
+        $userID = $_SESSION['userID'];
+        //get the 3 cards for the player
+        //$heartVal, $diamondVal, $spadeVal, $clubVal = 0
+        //foreach card{
+            //split card on _
+            //$suit = split[0]
+            //$val = split[1]
+            //the value is not a digit (jack,queen,king)
+            //if (!ctype_digit($val)) $val = 10
+            //if ($val == 1) $val += 10
+            //if ($suit == 'heart') $heartVal += $val
+            //if ($suit == 'diamond') $diamondVal += $val
+            //if ($suit == 'spade') $spadeVal += $val
+            //if ($suit == 'club') $clubVal += $val
+        //
+        //}
+        //return max($heartVal, $diamondVal, $spadeVal, $clubVal)
+
+    }
+
+    function replaceCard($cardNum){
+        $lobbyID = $_SESSION['roomID'];
+        $userID = $_SESSION['userID'];
+        //get all of the cards for the current user in the current lobby
+        //store the 4th card
+        //store the cardNum card
+        //update the user card1,card2, or card3 to be the 4th card
+        //update the 4th card to be null again
+        //update the top card to be the cardNum card
+    }
+
+
 
  ?>

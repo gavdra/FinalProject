@@ -56,7 +56,8 @@
                     <h3>Current Lobby: </h3>
                     <span>ID: 69</span>
                     <span>players: 1, 2</span>
-                    <h3>Current Hand: 19</h3>
+                    <h3>Current Score: 19</h3>
+                    <h3 id='turnHeader'></h3>
                 </div>
             </div>
             <div class="chatContainer">
