@@ -2,7 +2,6 @@
 require_once("dbInfo.inc");
 
 function getUserCardsByLobby($lobbyID,$userID){
-
 	global $conn; //mysql connection object from dbInfo
     try{
         if ($stmt = $conn->prepare("SELECT * FROM userGameState WHERE userID = ? AND lobbyID = ?")){
@@ -98,6 +97,99 @@ function getOtherLobbyUser($lobbyID,$userID){
 			$stmt->bind_param("ii",intval($lobbyID),intval($userID));
 			return json_decode(returnJson($stmt))[0]->userID;
 			$stmt->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+
+function setPickedUpCard($lobbyID,$userID,$topCard){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET pickedUpCard = ? WHERE lobbyID = ? AND userID = ? AND turnYN = 1")){
+			$stmt->bind_param("sii",$topCard,intval($lobbyID),intval($userID));
+			$stmt->execute();
+			return ($stmt->affected_rows > 0);
+			$stmt->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+function updateTopCard($lobbyID,$cardName){
+	global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("UPDATE gameTopCard SET topCardName = ? WHERE lobbyID = ?")){
+            $stmt->bind_param("si",$cardName,intval($lobbyID));
+            $stmt->execute();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function updateCard($lobbyID,$userID,$cardNum,$pickedUpCard){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET card$cardNum = ? WHERE lobbyID = ? AND userID = ? AND turnYN = 1")){
+			$stmt->bind_param("sii",$pickedUpCard,intval($lobbyID),intval($userID));
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET pickedUpCard = null WHERE lobbyID = ? AND userID = ? AND turnYN = 1")){
+			$stmt->bind_param("ii",intval($lobbyID),intval($userID));
+			$stmt->execute();
+			$stmt->close();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+function endTurn($lobbyID,$userID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET turnYN = 0 where userID = ? and lobbyID = ?")){
+			$stmt->bind_param("ii",intval($userID),intval($lobbyID));
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET turnYN = 1 where userID != ? and lobbyID = ?")){
+			$stmt->bind_param("ii",intval($userID),intval($lobbyID));
+			$stmt->execute();
 		}
 		else{
 			throw new Exception("you done goofed");

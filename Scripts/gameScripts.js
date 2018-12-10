@@ -44,7 +44,7 @@ function initCheckTurn(){
             }
 
             //give cards functionality
-            //$('#topCard').attr('onClick','pickupTopCard()');
+            $('#topCard').attr('onClick','pickupTopCard()');
             //$('#deck').attr('onClick','drawFromDB()');
             //$('.knockButton').attr('onClick','knock()');
 
@@ -62,13 +62,15 @@ function initCheckTurn(){
 }
 
 function pickupTopCard(){
-    //MyXHR('post',{method:'pickupTopCard',a:'game'}).done(function(json){
+    console.log("pick that shit up");
+    MyXHR('post',{method:'pickupTopCard',a:'game'}).done(function(json){
+        console.log("here");
         //all DB stuff is done to put the top card into the intermediate spot.
         //add an onlick for card1,card2,card3.
-            //$('#card1').attr('onClick','replaceCard('1')');
-            //$('#card2').attr('onClick','replaceCard('2')');
-            //$('#card3').attr('onClick','replaceCard('3')');
-    //});
+        $('#card1').attr('onClick',"replaceCard('1')");
+        $('#card2').attr('onClick',"replaceCard('2')");
+        $('#card3').attr('onClick',"replaceCard('3')");
+    });
 
 }
 function drawFromDB(){
@@ -83,15 +85,15 @@ function drawFromDB(){
 }
 
 function replaceCard(cardNum){
-    //MyXHR('post',{method:'replaceCard',a:'game',data: cardNum}).done(function(json){
-        //all DB stuff is done to replace the clicked card
-        //thier turn is done.
-            //$('.knockButton').attr('onclick');
-            //$('#topCard').removeAttr('onclick');
-            //$('#deck').removeAttr('onclick');
-        //call function to make it the next players turn
-        //call initUpdateCards
-    //});
+    MyXHR('post',{method:'replaceCard',a:'game',data: cardNum}).done(function(json){
+        // all DB stuff is done to replace the clicked card
+        // thier turn is done.
+        //     $('.knockButton').attr('onclick');
+        //     $('#topCard').removeAttr('onclick');
+        //     $('#deck').removeAttr('onclick');
+        // call function to make it the next players turn
+        // call initUpdateCards
+    });
 
 }
 

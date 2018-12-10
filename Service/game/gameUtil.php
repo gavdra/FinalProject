@@ -17,7 +17,6 @@
     }
 
     function checkTurn(){
-
         //select * from userGameState for this lobby
         $lobbyID = $_SESSION['roomID'];
         $stateArray = json_decode(getGameStateByLobby($lobbyID));
@@ -37,7 +36,11 @@
         $lobbyID = $_SESSION['roomID'];
         $userID = $_SESSION['userID'];
         //get the top card for the lobby
+        $topCard = json_decode(getTopCardByLobby($lobbyID))[0]->topCardName;
         //update the current user 4th card to be the top card
+        if (setPickedUpCard($lobbyID,$userID,$topCard)) {
+            echo json_encode(array('findDiscard'));
+        };
     }
     function drawFromDB(){
         $lobbyID = $_SESSION['roomID'];
@@ -77,11 +80,20 @@
         $lobbyID = $_SESSION['roomID'];
         $userID = $_SESSION['userID'];
         //get all of the cards for the current user in the current lobby
+        $cardArray = json_decode(getUserCardsByLobby($lobbyID,$userID));
+
+
+        $cardName = "card$cardNum";
+        $discardCard = $cardArray[0]->$cardName;
+        $pickedUpCard = $cardArray[0]->pickedUpCard;
         //store the 4th card
         //store the cardNum card
         //update the user card1,card2, or card3 to be the 4th card
         //update the 4th card to be null again
+        updateCard($lobbyID,$userID,$cardNum,$pickedUpCard);
         //update the top card to be the cardNum card
+        updateTopCard($lobbyID,$discardCard);
+        endTurn($lobbyID,$userID);
     }
 
 
