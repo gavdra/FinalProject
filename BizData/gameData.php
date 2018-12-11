@@ -39,6 +39,42 @@ function getTopCardByLobby($lobbyID){
     }
 }
 
+function getDeckByLobby($lobbyID){
+	global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("SELECT * FROM gameDeckCards WHERE lobbyID = ?")){
+            $stmt->bind_param("i",intval($lobbyID));
+            $stmt->execute();
+            return returnJson($stmt);
+            $stmt->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
+function removeCardFromDeck($lobbyID,$cardName){
+	global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("DELETE FROM gameDeckCards WHERE lobbyID = ? AND cardName = ?")){
+            $stmt->bind_param("is",intval($lobbyID),$cardName);
+            $stmt->execute();
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+}
+
 function getGameStateByLobby($lobbyID){
 	global $conn; //mysql connection object from dbInfo
 	try{
@@ -108,11 +144,11 @@ function getOtherLobbyUser($lobbyID,$userID){
 }
 
 
-function setPickedUpCard($lobbyID,$userID,$topCard){
+function setPickedUpCard($lobbyID,$userID,$pickedUp){
 	global $conn; //mysql connection object from dbInfo
 	try{
 		if ($stmt = $conn->prepare("UPDATE userGameState SET pickedUpCard = ? WHERE lobbyID = ? AND userID = ? AND turnYN = 1")){
-			$stmt->bind_param("sii",$topCard,intval($lobbyID),intval($userID));
+			$stmt->bind_param("sii",$pickedUp,intval($lobbyID),intval($userID));
 			$stmt->execute();
 			return ($stmt->affected_rows > 0);
 			$stmt->close();

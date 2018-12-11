@@ -50,6 +50,7 @@
                     <div id="card2"></div>
                 </div>
                 <div class="mdl-cell mdl-cell--2-col">
+                    <div id="pickedUpCard"></div>
                     <div id="card3"></div>
                 </div>
                 <div class="mdl-cell mdl-cell--2-col">

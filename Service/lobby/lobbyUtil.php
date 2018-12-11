@@ -53,10 +53,6 @@ function updateChallenges($lobbyString){
     $challengeArray = json_decode(getUserChallenges($_SESSION['userID']));
 
     foreach ($challengeArray as $ind => $currChallenge) {
-        //print_r($currChallenge);
-        //userIDSend, userIDRec, acceptedYN, challengeID
-        //in_array($needle, $haystack)
-
         //lobby user has sent a challenge to the current user. accepted status is still null
         if ($currChallenge->userIDRec == $_SESSION['userID']){
             if (in_array($currChallenge->userIDSend,$lobbyUserArray) && is_null($currChallenge->acceptedYN)){

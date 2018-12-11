@@ -7,15 +7,19 @@ function initUpdateSession(){
 
 function initUpdateCards(){
     MyXHR('get',{method:'updateCardUI',a:'game'}).done(function(json){
+        $("#card1").empty();
         var card1 = SVG('card1').size(200,500);
         card1.use(json['card1'],'../Assets/svg-cards.svg');
 
+        $("#card2").empty();
         var card2 = SVG('card2').size(200,500);
         card2.use(json['card2'],'../Assets/svg-cards.svg');
 
+        $("#card3").empty();
         var card3 = SVG('card3').size(200,500);
         card3.use(json['card3'],'../Assets/svg-cards.svg');
 
+        $("#topCard").empty();
         var topCard = SVG('topCard').size(200,500);
         topCard.use(json['topCard'],'../Assets/svg-cards.svg');
 
@@ -26,8 +30,14 @@ function initUpdateCards(){
 
 function initCheckTurn(){
     MyXHR('get',{method:'checkTurn',a:'game'}).done(function(json){
+        gameOver = false;
+        if (gameOver){
+            //empty the entire page content div
+            //put a message sayng you json['winloss'] with json['points']
+        }
+
         if (json['turnYN']){
-            //initUpdateCards()
+            initUpdateCards();
             //update page to say its your turn
             $('#turnHeader').html('Your Turn');
             //if it is still showing the waiting Message remove it and show the cards
@@ -45,20 +55,23 @@ function initCheckTurn(){
 
             //give cards functionality
             $('#topCard').attr('onClick','pickupTopCard()');
-            //$('#deck').attr('onClick','drawFromDB()');
-            //$('.knockButton').attr('onClick','knock()');
+            $('#deck').attr('onClick','drawFromDB()');
+            $('.knockButton').attr('onClick','knock()');
 
         }
 
         if (!json['turnYN']){
+            initUpdateCards();
             $('#turnHeader').html('Other Players Turn');
-            //$('.knockButton').attr('onclick');
-            //$('#topCard').removeAttr('onclick');
-            //$('#deck').removeAttr('onclick');
-
-
+            $('#topCard').removeAttr('onclick');
+            $('#deck').removeAttr('onclick');
+            $('#card1').removeAttr('onclick');
+            $('#card2').removeAttr('onclick');
+            $('#card3').removeAttr('onclick');
         }
     });
+
+    setTimeout(function(){initCheckTurn();},5000);
 }
 
 function pickupTopCard(){
@@ -74,27 +87,43 @@ function pickupTopCard(){
 
 }
 function drawFromDB(){
-    //MyXHR('post',{method:'drawFromDB',a:'game'}).done(function(json){
-        //card was chosen from deck and put into the 4th spot.
-        //add an onlick for card1,card2,card3.
-            //$('#card1').attr('onClick','replaceCard('1')');
-            //$('#card2').attr('onClick','replaceCard('2')');
-            //$('#card3').attr('onClick','replaceCard('3')');
-    //});
+    console.log("drawing a card from the DB");
+    MyXHR('post',{method:'drawFromDB',a:'game'}).done(function(json){
 
+        //make sure the spot to display is empty but showing
+        $("#pickedUpCard").empty();
+        $("#pickedUpCard").show();
+        //add the card to the spot
+        var pickedUpCard = SVG('pickedUpCard').size(200,500);
+        pickedUpCard.use(json[0],'../Assets/svg-cards.svg');
+        // card was chosen from deck and put into the 4th spot.
+        // give other cards functionality
+        $('#card1').attr('onClick',"replaceCard('1')");
+        $('#card2').attr('onClick',"replaceCard('2')");
+        $('#card3').attr('onClick',"replaceCard('3')");
+        $("#card3").addClass('cardAbove');
+    });
 }
 
 function replaceCard(cardNum){
+    //this function will update the clicked card to be the picked up card
+    //it also ends their turn
     MyXHR('post',{method:'replaceCard',a:'game',data: cardNum}).done(function(json){
-        // all DB stuff is done to replace the clicked card
-        // thier turn is done.
-        //     $('.knockButton').attr('onclick');
-        //     $('#topCard').removeAttr('onclick');
-        //     $('#deck').removeAttr('onclick');
-        // call function to make it the next players turn
-        // call initUpdateCards
-    });
+        $("#card3").removeClass('cardAbove');
+        $("#pickedUpCard").empty();
+        $("#pickedUpCard").hide();
 
+    });
+}
+
+function knock(){
+    //this will knock and give the other player one more turn
+    MyXHR('post',{method:'knock',a:'game'}).done(function(json){
+        // $("#card3").removeClass('cardAbove');
+        // $("#pickedUpCard").empty();
+        // $("#pickedUpCard").hide();
+
+    });
 }
 
 

@@ -12,12 +12,22 @@
     display: none;
 }
 
+.cardAbove{
+    margin-top: 100px !important;
+}
+
 #deck{
     width: 200px;
     height: 250px;
     display: none;
 }
 #topCard{
+    margin-top: 20px;
+    width: 200px;
+    height: 250px;
+    display: none;
+}
+#pickedUpCard{
     margin-top: 20px;
     width: 200px;
     height: 250px;

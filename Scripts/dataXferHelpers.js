@@ -57,7 +57,7 @@ function initUpdateLobby(){
         }
     });
     initUpdateChallenges();
-    setTimeout('initUpdateLobby()',10000); //keeping this for future ref to put at bottom of getChat
+    setTimeout('initUpdateLobby()',1000); //keeping this for future ref to put at bottom of getChat
 }
 
 //begin the series of challenges being searched for

@@ -39,12 +39,22 @@
         $topCard = json_decode(getTopCardByLobby($lobbyID))[0]->topCardName;
         //update the current user 4th card to be the top card
         if (setPickedUpCard($lobbyID,$userID,$topCard)) {
-            echo json_encode(array('findDiscard'));
+            echo json_encode(array('got the top card'));
         };
     }
     function drawFromDB(){
         $lobbyID = $_SESSION['roomID'];
         $userID = $_SESSION['userID'];
+
+        $deckArray = json_decode(getDeckByLobby($lobbyID));
+        $maxInd = intval(count($deckArray) - 1);
+        $pickUpInd = rand(0,$maxInd);
+        $pickedUpCard = $deckArray[$pickUpInd];
+
+        if (setPickedUpCard($lobbyID,$userID,$pickedUpCard->cardName)) {
+            removeCardFromDeck($lobbyID,$pickedUpCard->cardName);
+            echo json_encode(array($pickedUpCard->cardName));
+        };
 
         //get all of the cards for this lobbyid in an array
         //find a random number between 0 and the count of the array - 1
@@ -86,14 +96,12 @@
         $cardName = "card$cardNum";
         $discardCard = $cardArray[0]->$cardName;
         $pickedUpCard = $cardArray[0]->pickedUpCard;
-        //store the 4th card
-        //store the cardNum card
-        //update the user card1,card2, or card3 to be the 4th card
-        //update the 4th card to be null again
+
+        //replace the discarded card with the picked up card
         updateCard($lobbyID,$userID,$cardNum,$pickedUpCard);
-        //update the top card to be the cardNum card
         updateTopCard($lobbyID,$discardCard);
         endTurn($lobbyID,$userID);
+        echo json_encode(array('Card Replaced'));
     }
 
 
