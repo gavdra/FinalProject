@@ -1,3 +1,8 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) header("Location:../index.php");
+ ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,9 +17,9 @@
         <script src="../Scripts/svgHelpers.js" charset="utf-8"></script>
         <script src="../Scripts/uiHelpers.js" charset="utf-8"></script>
         <link rel="stylesheet" href="../Styles/style.css">
-        <title>Home Page</title>
+        <title>Thirty One</title>
     </head>
-    <body onload="initUpdateSessionLobby();initUpdateLobby();scrollHomepageChat();">
+    <body onload="initUpdateSessionLobby();initUpdateLobby();initGetChat();scrollHomepageChat();">
     <!-- <body onload="initUpdateLobby();initGetChat();scrollHomepageChat();"> -->
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">

@@ -77,11 +77,6 @@ function updateChallenges($lobbyString){
         if ($currChallenge->userIDSend == $_SESSION['userID']){
             if(in_array($currChallenge->userIDRec,$lobbyUserArray) && is_null($currChallenge->acceptedYN)) array_push($returnJson['updateShowSpinner'],array($currChallenge->userIDRec,$currChallenge->challengeID));
         }
-            //update the lobby user to show a spinner
-        //challenge that current user sent to lobby user has been denied or timed out
-            //update lobby user that has the spinner to remove it and show standard view. THIS NEEDS ALL OF THE USERS INFO
-        //challenge that lobby user sent to current user has been denied or timed out
-            //update lobby user to remove yes / no buttons and show standard view. THIS NEEDS ALL OF THE USERS INFO
     }
 
     echo json_encode($returnJson);

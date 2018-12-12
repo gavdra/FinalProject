@@ -29,7 +29,7 @@ function initUpdateCards(){
         topCard.use(json['topCard'],'../Assets/svg-cards.svg');
 
         //$('#deckCount').html("Deck Count: " + json['deckCount']);
-        $('#deckCount').html("Deck Count: " + 12);
+        $('#deckCount').html("Deck Count: " + json['deckCount']);
     });
 }
 
@@ -135,11 +135,32 @@ function replaceCard(cardNum){
 
 function knock(){
     //this will knock and end the the players turn
-    MyXHR('post',{method:'knock',a:'game'}).done(function(json){
-        // $("#card3").removeClass('cardAbove');
-        // $("#pickedUpCard").empty();
-        // $("#pickedUpCard").hide();
+    MyXHR('post',{method:'knock',a:'game'}).done(function(json){});
+}
 
+function initUpdateChat(called=false) {
+    lastChatID = $("#chatList").find("li").last().attr('id');
+    MyXHR('get',{method:'getChat',a:'chat',data: lastChatID}).done(function(json){
+        if (json){
+            for (i = 0; i < json.length; i++){
+                var messageTimestamp = new Date(json[i]['timestamp']);
+                var hours24 = messageTimestamp.getHours();
+                var tod = hours24 > 12 ? 'PM' : 'AM';
+                var hours12 = hours24 > 12 ? hours24 - 12 : hours24;
+                var minutes = messageTimestamp.getMinutes() + tod;
+
+                var eleString = "<li id='"+json[i]['messageID']+"' class='mdl-list__item mdl-list__item--three-line chatHeightMax'>" ;
+                eleString += "<span class='mdl-list__item-primary-content chatHeightMax'>" ;
+                eleString += "<span class='chatNameSpan'>"+json[i]['username']+"<span class='timestamp'>"+"["+hours12+":"+minutes+"]</span></span>" ;
+                eleString += "<span class='mdl-list__item-text-body chatMessageSpan'>" ;
+                eleString += json[i]['messageText'];
+                eleString += "</span></span></li><hr>" ;
+                $("#chatList").append(eleString);
+            }
+        }
+        if (!called){
+            setTimeout('initGetChat()',2000); //keeping this for future ref to put at bottom of getChat
+        }
     });
 }
 

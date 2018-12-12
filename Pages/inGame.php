@@ -1,3 +1,8 @@
+<?php
+session_start();
+if (!isset($_SESSION['userID'])) header("Location:../index.php");
+ ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,7 +22,7 @@
         <title>In Game</title>
     </head>
     <!-- <body onload="initGetChat();"> -->
-    <body onload="initUpdateSession();initCheckTurn();initUpdateCards();">
+    <body onload="initUpdateSession();initCheckTurn();initUpdateCards();initUpdateChat()">
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
           <header class="mdl-layout__header">
             <div class="mdl-layout__header-row">
@@ -54,55 +59,11 @@
                     <div id="card3"></div>
                 </div>
                 <div class="mdl-cell mdl-cell--2-col">
-                    <h3>Current Lobby: </h3>
-                    <span>ID: 69</span>
-                    <span>players: 1, 2</span>
-                    <h3>Current Score: 19</h3>
                     <h3 id='turnHeader'></h3>
                 </div>
             </div>
-            <div class="chatContainer">
+            <div class="chatContainer" id="inGameChat">
                 <ul id="chatList" class="mdl-list">
-                    <li class="mdl-list__item mdl-list__item--three-line">
-                      <span class="mdl-list__item-primary-content">
-                        <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                        <span class="mdl-list__item-text-body chatMessageSpan">
-                            Will Sucks a lot of big butts i cant even believe it its rediculous
-                        </span>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--three-line">
-                      <span class="mdl-list__item-primary-content">
-                        <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                        <span class="mdl-list__item-text-body chatMessageSpan">
-                            Will Sucks a lot of big butts i cant even believe it its rediculous
-                        </span>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--three-line">
-                      <span class="mdl-list__item-primary-content">
-                        <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                        <span class="mdl-list__item-text-body chatMessageSpan">
-                            Will Sucks a lot of big butts i cant even believe it its rediculous
-                        </span>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--three-line">
-                      <span class="mdl-list__item-primary-content">
-                        <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                        <span class="mdl-list__item-text-body chatMessageSpan">
-                            Will Sucks a lot of big butts i cant even believe it its rediculous
-                        </span>
-                      </span>
-                    </li>
-                    <li class="mdl-list__item mdl-list__item--three-line">
-                      <span class="mdl-list__item-primary-content">
-                        <span class="chatNameSpan">ButtMuncher1<span class="timestamp">[2:30PM]</span></span>
-                        <span class="mdl-list__item-text-body chatMessageSpan">
-                            Will Sucks a lot of big butts i cant even believe it its rediculous
-                        </span>
-                      </span>
-                    </li>
                 </ul>
                 <div class="chatInput mdl-textfield mdl-js-textfield">
                     <input class="mdl-textfield__input" type="text" id="chatMessage">

@@ -145,12 +145,32 @@ function getOtherLobbyUser($lobbyID,$userID){
 
 
 function setPickedUpCard($lobbyID,$userID,$pickedUp){
+	if (pickedUpCardIsNull($lobbyID,$userID)){
+		global $conn; //mysql connection object from dbInfo
+		try{
+			if ($stmt = $conn->prepare("UPDATE userGameState SET pickedUpCard = ? WHERE lobbyID = ? AND userID = ? AND turnYN = 1")){
+				$stmt->bind_param("sii",$pickedUp,intval($lobbyID),intval($userID));
+				$stmt->execute();
+				return ($stmt->affected_rows > 0);
+				$stmt->close();
+			}
+			else{
+				throw new Exception("you done goofed");
+			}
+		}
+		catch(Exception $e){
+			echo $e;
+		}
+	}
+}
+
+function pickedUpCardIsNull($lobbyID,$userID){
 	global $conn; //mysql connection object from dbInfo
 	try{
-		if ($stmt = $conn->prepare("UPDATE userGameState SET pickedUpCard = ? WHERE lobbyID = ? AND userID = ? AND turnYN = 1")){
-			$stmt->bind_param("sii",$pickedUp,intval($lobbyID),intval($userID));
+		if ($stmt = $conn->prepare("SELECT pickedUpCard FROM userGameState WHERE lobbyID = ? AND userID = ?")){
+			$stmt->bind_param("ii",intval($lobbyID),intval($userID));
 			$stmt->execute();
-			return ($stmt->affected_rows > 0);
+			return is_null(json_decode(returnJson($stmt))[0]->pickedUpCard);
 			$stmt->close();
 		}
 		else{
