@@ -14,23 +14,83 @@
 
     function updateSession($lobbyID){
         $_SESSION['roomID']=$lobbyID;
+        //make in game status true
+        updateUserInGame($_SESSION['userID'],1);
     }
 
+    function leaveGame(){
+        //make in game status = 0;
+        deleteGameLobby($_SESSION['roomID']);
+        updateUserInGame($_SESSION['userID'],0);
+        $_SESSION['roomID']=1;
+        //header("Location:../Pages/homePage.php");
+    }
+
+    function checkScore($cardArray){
+        //get the 3 cards for the player
+        $heartVal = 0;
+        $diamondVal = 0;
+        $spadeVal = 0;
+        $clubVal = 0;
+
+        foreach ($cardArray as $card) {
+            $splitCard = explode("_",$card);
+            $suit = $splitCard[0];
+            $val = $splitCard[1];
+            //the value is not a digit (jack,queen,king) make it 10
+            if (!ctype_digit($val)) $val = 10;
+            //if the value is 1 thats an ace. make val 11
+            if ($val == 1) $val = 11;
+            if ($suit == 'heart') $heartVal += $val;
+            if ($suit == 'diamond') $diamondVal += $val;
+            if ($suit == 'spade') $spadeVal += $val;
+            if ($suit == 'club') $clubVal += $val;
+        }
+        return max($heartVal, $diamondVal, $spadeVal, $clubVal);
+    }
     function checkTurn(){
         //select * from userGameState for this lobby
         $lobbyID = $_SESSION['roomID'];
         $stateArray = json_decode(getGameStateByLobby($lobbyID));
+        //player 1 turn = 0 knock = 1
+        //player 2 turn = 1 knock = 0
 
         //neither players turn. update lobby so it is someone
         if (!$stateArray[0]->turnYN && !$stateArray[1]->turnYN) updateLobbyTurn($lobbyID,$stateArray[0]->userID);
 
-        foreach ($stateArray as $currState) {
-            if ($currState->userID == $_SESSION['userID'] && $currState->turnYN) echo json_encode(array('turnYN' => 1));
+        //Knock is true and its my turn. the game is over
+        if($stateArray[0]->turnYN && $stateArray[1]->knockYN){
+            //get the score for both users
+            $player1Cards = array($stateArray[0]->card1,$stateArray[0]->card2,$stateArray[0]->card3);
+            $player2Cards = array($stateArray[1]->card1,$stateArray[1]->card2,$stateArray[1]->card3);
 
-            if ($currState->userID != $_SESSION['userID'] && $currState->turnYN) echo json_encode(array('turnYN' => 0));
+            $p1Score = checkScore($player1Cards);
+            $p2Score = checkScore($player2Cards);
+
+            if ($stateArray[0]->userID == $_SESSION['userID']) {
+                echo json_encode(array('gameOver' => 1,'score'=> $p1Score, 'winLoss' => $p1Score > $p2Score));
+            }
+            else {
+                echo json_encode(array('gameOver' => 1,'score'=> $p2Score, 'winLoss' => $p1Score < $p2Score));
+            }
+
+            //($stateArray[0]->userID == $_SESSION['userID'])
 
         }
+        else{
+            foreach ($stateArray as $currState) {
+                if ($currState->userID == $_SESSION['userID'] && $currState->turnYN){
+                    echo json_encode(array('turnYN' => 1));
+                }
+
+                if ($currState->userID != $_SESSION['userID'] && $currState->turnYN){
+                    echo json_encode(array('turnYN' => 0));
+                }
+
+            }
+        }
     }
+
 
     function pickupTopCard(){
         $lobbyID = $_SESSION['roomID'];
@@ -64,26 +124,13 @@
 
     }
 
-    function checkScore(){
+
+    function knock(){
         $lobbyID = $_SESSION['roomID'];
         $userID = $_SESSION['userID'];
-        //get the 3 cards for the player
-        //$heartVal, $diamondVal, $spadeVal, $clubVal = 0
-        //foreach card{
-            //split card on _
-            //$suit = split[0]
-            //$val = split[1]
-            //the value is not a digit (jack,queen,king)
-            //if (!ctype_digit($val)) $val = 10
-            //if ($val == 1) $val += 10
-            //if ($suit == 'heart') $heartVal += $val
-            //if ($suit == 'diamond') $diamondVal += $val
-            //if ($suit == 'spade') $spadeVal += $val
-            //if ($suit == 'club') $clubVal += $val
-        //
-        //}
-        //return max($heartVal, $diamondVal, $spadeVal, $clubVal)
 
+        updateUserKnock($lobbyID,$userID);
+        endTurn($lobbyID,$userID);
     }
 
     function replaceCard($cardNum){
@@ -100,7 +147,13 @@
         //replace the discarded card with the picked up card
         updateCard($lobbyID,$userID,$cardNum,$pickedUpCard);
         updateTopCard($lobbyID,$discardCard);
-        endTurn($lobbyID,$userID);
+        if (checkOtherPlayerKnock($lobbyID,$userID)) {
+            updateUserKnock($lobbyID,$userID);
+            makeOtherPlayersTurn($lobbyID,$userID);
+        }
+        else {
+            endTurn($lobbyID,$userID);
+        }
         echo json_encode(array('Card Replaced'));
     }
 

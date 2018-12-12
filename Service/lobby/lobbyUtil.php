@@ -1,6 +1,10 @@
 <?php
 session_start();
 include('BizData/lobbyData.php');
+function updateSessionLobby(){
+    $_SESSION['roomID']=1;
+    //make in game status false
+}
 
 function updateLobby($lobbyString){
     //this will just store all online users to check who to remove after

@@ -236,6 +236,86 @@ function endTurn($lobbyID,$userID){
 	}
 }
 
+function updateUserKnock($lobbyID,$userID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET knockYN = 1 where userID = ? and lobbyID = ?")){
+			$stmt->bind_param("ii",intval($userID),intval($lobbyID));
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+function checkOtherPlayerKnock($lobbyID,$userID){
+		global $conn; //mysql connection object from dbInfo
+		try{
+			if ($stmt = $conn->prepare("SELECT knockYN FROM userGameState WHERE lobbyID = ? AND userID != ?")){
+				$stmt->bind_param("ii",intval($lobbyID),intval($userID));
+				return json_decode(returnJson($stmt))[0]->knockYN;
+				$stmt->close();
+			}
+			else{
+				throw new Exception("you done goofed");
+			}
+		}
+		catch(Exception $e){
+			echo $e;
+		}
+}
+
+function makeOtherPlayersTurn($lobbyID,$userID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE userGameState SET turnYN = 1 where userID != ? and lobbyID = ?")){
+			$stmt->bind_param("ii",intval($userID),intval($lobbyID));
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+function updateUserInGame($userID,$inGameYN){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE user SET inGameYN = ? WHERE userID = ?")){
+			$stmt->bind_param("ii",intval($inGameYN),$userID);
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+function deleteGameLobby($lobbyID){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("DELETE FROM gameLobby WHERE lobbyID = ?")){
+			$stmt->bind_param("i",intval($lobbyID));
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
 //stmt with all params already bound (or no params at all)
 function returnJson ($stmt){
 	$stmt->execute();

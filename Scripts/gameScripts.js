@@ -5,6 +5,11 @@ function initUpdateSession(){
     MyXHR('get',{method:'updateSession',a:'game',data:lobbyID}).done(function(json){});
 }
 
+function initLeaveGame(){
+    MyXHR('get',{method:'leaveGame',a:'game'}).done(function(json){});
+
+}
+
 function initUpdateCards(){
     MyXHR('get',{method:'updateCardUI',a:'game'}).done(function(json){
         $("#card1").empty();
@@ -30,45 +35,57 @@ function initUpdateCards(){
 
 function initCheckTurn(){
     MyXHR('get',{method:'checkTurn',a:'game'}).done(function(json){
-        gameOver = false;
-        if (gameOver){
+        if (json['gameOver']){
+            $(".page-content").empty();
             //empty the entire page content div
-            //put a message sayng you json['winloss'] with json['points']
+            if (json['winLoss']) {
+                $(".page-content").append("<h1>YOU WIN</h1>");
+                $(".page-content").append("<h4>You had "+json['score']+" points</h4>");
+                console.log("YOU WIN ");
+                console.log(json['score']);
+            }
+            else {
+                $(".page-content").append("<h1>YOU LOSE</h1>");
+                $(".page-content").append("<h4>You had "+json['score']+" points</h4>");
+            }
+            //put a message sayng you json['winloss'] with json['score']
         }
+        else{
+            if (json['turnYN']){
+                initUpdateCards();
+                //update page to say its your turn
+                $('#turnHeader').html('Your Turn');
+                //if it is still showing the waiting Message remove it and show the cards
+                if (!$("#waitingMessage").is(":hidden")) {
+                    $('#waitingMessage').hide();
+                    $('#deckCount').show();
+                    $('#deck').show();
+                    $('#card1').show();
+                    $('#card2').show();
+                    $('#card3').show();
+                    $('#topCard').show();
+                    var deck = SVG('deck').size(200,500);
+                    deck.use('back','../Assets/svg-cards.svg');
+                }
 
-        if (json['turnYN']){
-            initUpdateCards();
-            //update page to say its your turn
-            $('#turnHeader').html('Your Turn');
-            //if it is still showing the waiting Message remove it and show the cards
-            if (!$("#waitingMessage").is(":hidden")) {
-                $('#waitingMessage').hide();
-                $('#deckCount').show();
-                $('#deck').show();
-                $('#card1').show();
-                $('#card2').show();
-                $('#card3').show();
-                $('#topCard').show();
-                var deck = SVG('deck').size(200,500);
-                deck.use('back','../Assets/svg-cards.svg');
+                //give cards functionality
+                $('#topCard').attr('onClick','pickupTopCard()');
+                $('#deck').attr('onClick','drawFromDB()');
+                $('.knockButton').attr('onClick','knock()');
+
             }
 
-            //give cards functionality
-            $('#topCard').attr('onClick','pickupTopCard()');
-            $('#deck').attr('onClick','drawFromDB()');
-            $('.knockButton').attr('onClick','knock()');
-
+            if (!json['turnYN']){
+                initUpdateCards();
+                $('#turnHeader').html('Other Players Turn');
+                $('#topCard').removeAttr('onclick');
+                $('#deck').removeAttr('onclick');
+                $('#card1').removeAttr('onclick');
+                $('#card2').removeAttr('onclick');
+                $('#card3').removeAttr('onclick');
+            }
         }
 
-        if (!json['turnYN']){
-            initUpdateCards();
-            $('#turnHeader').html('Other Players Turn');
-            $('#topCard').removeAttr('onclick');
-            $('#deck').removeAttr('onclick');
-            $('#card1').removeAttr('onclick');
-            $('#card2').removeAttr('onclick');
-            $('#card3').removeAttr('onclick');
-        }
     });
 
     setTimeout(function(){initCheckTurn();},5000);
@@ -117,7 +134,7 @@ function replaceCard(cardNum){
 }
 
 function knock(){
-    //this will knock and give the other player one more turn
+    //this will knock and end the the players turn
     MyXHR('post',{method:'knock',a:'game'}).done(function(json){
         // $("#card3").removeClass('cardAbove');
         // $("#pickedUpCard").empty();

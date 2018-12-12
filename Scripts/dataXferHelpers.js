@@ -198,6 +198,10 @@ function initGetChat(called=false) {
     });
 }
 
+function initUpdateSessionLobby(){
+    MyXHR('get',{method:'updateSessionLobby',a:'game'}).done(function(json){});
+}
+
 function MyXHR(getPost,d){
    //ajax shortcut
    return $.ajax({

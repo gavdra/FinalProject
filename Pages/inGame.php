@@ -27,7 +27,7 @@
               <div class="mdl-layout-spacer"></div>
               <!-- Navigation. We hide it in small screens. -->
               <nav class="mdl-navigation mdl-layout--large-screen-only">
-                  <a class="mdl-navigation__link" href="">Quit Game</a>
+                  <a onclick="initLeaveGame()" class="mdl-navigation__link" href="homePage.php">Quit Game</a>
               </nav>
               <!-- Right aligned menu below button -->
 
