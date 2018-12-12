@@ -90,4 +90,23 @@ function getUserID($username){
 
 }
 
+function setUserOnlineStatus($userID,$onlineYN){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("UPDATE user SET onlineYN = ? WHERE userID = ?")){
+            $stmt->bind_param("ii", $onlineYN,$userID);
+            $stmt->execute();
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+
+}
+
  ?>

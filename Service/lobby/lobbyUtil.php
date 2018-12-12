@@ -1,9 +1,16 @@
 <?php
 session_start();
 include('BizData/lobbyData.php');
+
 function updateSessionLobby(){
     $_SESSION['roomID']=1;
     //make in game status false
+    updateUserInGame($_SESSION['userID'],0);
+}
+
+function logout(){
+    setUserOnlineStatus($_SESSION['userID'],0);
+    session_destroy();
 }
 
 function updateLobby($lobbyString){
@@ -50,9 +57,7 @@ function updateLobby($lobbyString){
 
 function updateChallenges($lobbyString){
     $returnJson = array('updateShowButtons'=>array(),'updateShowSpinner'=>array(),'updateRemoveButtons'=>array(),'updateRemoveSpinner'=>array(),'challengeID'=>array());
-
     $lobbyUserArray = explode("_",$lobbyString);
-
     //loop through array of all challenges
     $challengeArray = json_decode(getUserChallenges($_SESSION['userID']));
 

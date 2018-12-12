@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-red.min.css" />
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-        <script src="../Scripts/dataXferHelpers.js" charset="utf-8"></script>
+        <script src="../Scripts/lobbyScripts.js" charset="utf-8"></script>
         <script src="../Scripts/gameScripts.js" charset="utf-8"></script>
         <script src="../Scripts/uiHelpers.js" charset="utf-8"></script>
         <link rel="stylesheet" href="../Styles/gameStyle.css">

@@ -57,7 +57,7 @@ function initUpdateLobby(){
         }
     });
     initUpdateChallenges();
-    setTimeout('initUpdateLobby()',1000); //keeping this for future ref to put at bottom of getChat
+    setTimeout('initUpdateLobby()',2000); //keeping this for future ref to put at bottom of getChat
 }
 
 //begin the series of challenges being searched for
@@ -199,7 +199,12 @@ function initGetChat(called=false) {
 }
 
 function initUpdateSessionLobby(){
-    MyXHR('get',{method:'updateSessionLobby',a:'game'}).done(function(json){});
+    MyXHR('get',{method:'updateSessionLobby',a:'lobby'}).done(function(json){});
+}
+
+function initLogOut(){
+    MyXHR('get',{method:'logout',a:'lobby'}).done(function(json){}).always(window.location.href = "../index.php");
+
 }
 
 function MyXHR(getPost,d){

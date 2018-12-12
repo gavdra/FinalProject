@@ -12,6 +12,7 @@ if (isset($_POST["loginButton"])) {
         //$_SESSION['userID'] = 1;
         //roomID of 1 is the lobby, this is where they get sent automatically.
         $_SESSION['roomID'] = 1;
+        setUserOnlineStatus($_SESSION['userID'],1);
         header("Location: ../../Pages/homePage.php");
     }
     else {

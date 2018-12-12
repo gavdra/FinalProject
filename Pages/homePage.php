@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-red.min.css" />
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-        <script src="../Scripts/dataXferHelpers.js" charset="utf-8"></script>
+        <script src="../Scripts/lobbyScripts.js" charset="utf-8"></script>
         <script src="../Scripts/svgHelpers.js" charset="utf-8"></script>
         <script src="../Scripts/uiHelpers.js" charset="utf-8"></script>
         <link rel="stylesheet" href="../Styles/style.css">
@@ -27,7 +27,7 @@
               <nav class="mdl-navigation">
                   <a class="mdl-navigation__link" href="">Home</a>
                   <a class="mdl-navigation__link" href="">My Account</a>
-                  <a class="mdl-navigation__link" href="../index.php">Logout</a>
+                  <a onclick="initLogOut()"class="mdl-navigation__link">Logout</a>
               </nav>
             </div>
           </header>

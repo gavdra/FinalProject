@@ -234,6 +234,41 @@ function getLobbyIDByPlayers($pOneID,$pTwoID){
     }
 }
 
+function updateUserInGame($userID,$inGameYN){
+	global $conn; //mysql connection object from dbInfo
+	try{
+		if ($stmt = $conn->prepare("UPDATE user SET inGameYN = ? WHERE userID = ?")){
+			$stmt->bind_param("ii",intval($inGameYN),$userID);
+			$stmt->execute();
+		}
+		else{
+			throw new Exception("you done goofed");
+		}
+	}
+	catch(Exception $e){
+		echo $e;
+	}
+}
+
+function setUserOnlineStatus($userID,$onlineYN){
+    global $conn; //mysql connection object from dbInfo
+    try{
+        if ($stmt = $conn->prepare("UPDATE user SET onlineYN = ? WHERE userID = ?")){
+            $stmt->bind_param("ii", $onlineYN,$userID);
+            $stmt->execute();
+            $stmt->close();
+            $conn->close();
+        }
+        else{
+            throw new Exception("you done goofed");
+        }
+    }
+    catch(Exception $e){
+        echo $e;
+    }
+
+}
+
 
 function returnJson ($stmt){
 	$stmt->execute();

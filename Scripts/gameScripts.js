@@ -88,7 +88,7 @@ function initCheckTurn(){
 
     });
 
-    setTimeout(function(){initCheckTurn();},5000);
+    setTimeout(function(){initCheckTurn();},1000);
 }
 
 function pickupTopCard(){
